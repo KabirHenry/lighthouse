@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 
 import './App.css';
 
-import HomePage from './components/Home';
+import HomePage from './components/HomePage';
 import NotFound from './components/NotFound';
 import Items from './components/Items';
 import { useCallback, useEffect, useState } from 'react';

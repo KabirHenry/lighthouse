@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import type { Home } from '../services';
 import HomeSelector from './HomeSelector';
 
-function Welcome({
+function HomePage({
 	isLoaded,
 	home,
 	homes,
@@ -31,4 +31,4 @@ function Welcome({
 	</>;
 }
 
-export default Welcome;
+export default HomePage;
