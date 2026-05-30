@@ -1,25 +1,10 @@
 import { Link } from 'react-router';
 
-import type { Home } from '../services';
 import HomeSelector from './HomeSelector';
 
-function HomePage({
-	isLoaded,
-	home,
-	homes,
-}: {
-	isLoaded: boolean;
-	home: Home | null;
-	homes: Home[];
-	addHome: (name: string) => Promise<void>;
-	deleteHome: (id: number) => Promise<void>;
-}) {
+function HomePage() {
 	return <>
-		<HomeSelector
-			isLoaded={isLoaded}
-			home={home}
-			homes={homes}
-		/>
+		<HomeSelector/>
 		<h1>Lighthouse</h1>
 		<h2>Welcome to Lighthouse!</h2>
 		<ul className="">

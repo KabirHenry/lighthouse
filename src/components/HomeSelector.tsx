@@ -2,17 +2,11 @@ import { Link } from 'react-router';
 import { Container, Dropdown } from 'react-bootstrap';
 import { BarLoader } from 'react-spinners';
 
-import type { Home } from '../services';
+import useHomesContext from '../hooks/useHomesContext';
 
-function HomeSelector({
-	isLoaded,
-	home,
-	homes,
-}: {
-	isLoaded: boolean;
-	home: Home | null;
-	homes: Home[];
-}) {
+function HomeSelector() {
+	const { isLoaded, home, homes } = useHomesContext();
+
 	if (!isLoaded) {
 		return <Container className="py-4 px-3 mx-auto">
 			<BarLoader width={'100%'} />
