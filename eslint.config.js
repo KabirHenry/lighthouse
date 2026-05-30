@@ -18,5 +18,9 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      "semi": ["error", "always"],
+      "indent": ["error", "tab"],
+    },
   },
 ])
