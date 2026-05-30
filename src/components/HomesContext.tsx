@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
 
-import HomesStateContext from '../context/homesStateContext';
+import HomesStateContext, { type HomesContextValue } from '../context/homesStateContext';
 import { getHomeService, type Home, type HomeService } from '../services';
 
 function HomesProvider({ children }: { children: React.ReactNode }) {
@@ -11,13 +11,12 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 
 	const isLoaded = homeService !== null && home !== null;
 
-	const reloadHomes = async (service?: HomeService) => {
-		const homeServiceInstance = service ?? homeService;
-		if (!homeServiceInstance) {
+	const reloadHomes = async () => {
+		if (!homeService) {
 			return;
 		}
 
-		const allHomes = await homeServiceInstance.homes();
+		const allHomes = await homeService.homes();
 		setHomes(allHomes.homes);
 		setHome(allHomes.currentHome);
 	};
@@ -28,7 +27,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		}
 
 		await homeService.addHome(name);
-		await reloadHomes(homeService);
+		await reloadHomes();
 	};
 
 	const deleteHome = async (id: number) => {
@@ -37,7 +36,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		}
 
 		await homeService.deleteHome(id);
-		await reloadHomes(homeService);
+		await reloadHomes();
 	};
 
 	useEffect(() => {
@@ -67,11 +66,10 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		};
 	}, []);
 
-	const homesState = {
+	const homesState: HomesContextValue = {
 		isLoaded,
 		home,
 		homes,
-		reloadHomes,
 		addHome,
 		deleteHome,
 	};
