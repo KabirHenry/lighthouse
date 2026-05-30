@@ -24,12 +24,20 @@ function App() {
 				return;
 			}
 
-			const currentHome = await homeService.currentHome();
-			setHome(currentHome);
-
 			const allHomes = await homeService.homes();
 			setHomes(allHomes.homes);
+			setHome(allHomes.currentHome);
 		})();
+	}, [homeService]);
+
+	const reloadHomes = useCallback(async () => {
+		if (!homeService) {
+			return;
+		}
+
+		const allHomes = await homeService.homes();
+		setHomes(allHomes.homes);
+		setHome(allHomes.currentHome);
 	}, [homeService]);
 
 	const addHome = useCallback(async (name: string) => {
@@ -37,17 +45,31 @@ function App() {
 			return;
 		}
 
-		const newHome = await homeService.addHome(name);
-		if (newHome) {
-			setHomes((prev) => [...prev, newHome]);
-			setHome(newHome);
+		await homeService.addHome(name);
+		await reloadHomes();
+	}, [homeService, reloadHomes]);
+
+	const deleteHome = useCallback(async (id: number) => {
+		if (!homeService) {
+			return;
 		}
-	}, [homeService]);
+
+		await homeService.deleteHome(id);
+		await reloadHomes();
+	}, [homeService, reloadHomes]);
 
 	return (
 		<Container as={'main'} className="py-4 px-3 mx-auto">
 			<Routes>
-				<Route path="/" element={<HomePage isLoaded={isLoaded} home={home} homes={homes} addHome={addHome} />} />
+				<Route path="/" element={
+					<HomePage
+						isLoaded={isLoaded}
+						home={home}
+						homes={homes}
+						addHome={addHome}
+						deleteHome={deleteHome}
+					/>
+				} />
 				<Route path="/items" element={<Items/>} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>

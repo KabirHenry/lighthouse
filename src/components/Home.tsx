@@ -12,9 +12,14 @@ function Welcome({
 	home: Home | null;
 	homes: Home[];
 	addHome: (name: string) => Promise<void>;
+	deleteHome: (id: number) => Promise<void>;
 }) {
 	return <>
-		<HomeSelector isLoaded={isLoaded} home={home} homes={homes} />
+		<HomeSelector
+			isLoaded={isLoaded}
+			home={home}
+			homes={homes}
+		/>
 		<h1>Lighthouse</h1>
 		<h2>Welcome to Lighthouse!</h2>
 		<ul className="">

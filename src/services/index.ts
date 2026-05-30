@@ -28,7 +28,7 @@ export class HomeService {
 		this.db = db;
 	}
 
-	async homes(): Promise<{ homes: Home[]; currentHomeID: number | undefined }> {
+	async homes(): Promise<{ homes: Home[]; currentHome: Home }> {
 		const homeStore = this.db.transaction(Stores.HOMES, 'readonly').objectStore(Stores.HOMES);
 		const homes = await homeStore.getAll();
 
@@ -36,27 +36,33 @@ export class HomeService {
 		const lastHomeIDResult = await localStore.get('lastHomeID');
 		const lastHomeID = lastHomeIDResult?.value;
 
-		return { homes, currentHomeID: lastHomeID };
+		const currentHome = homes.find((home) => home.id === lastHomeID) || homes[0];
+		return { homes, currentHome };
 	}
 
-	async currentHome(): Promise<Home | null> {
-		const localStore = this.db.transaction(Stores.LOCAL, 'readonly').objectStore(Stores.LOCAL);
+	async addHome(name: string): Promise<void> {
+		const homeStore = this.db.transaction(Stores.HOMES, 'readwrite').objectStore(Stores.HOMES);
+		await homeStore.add({ name });
+	}
+
+	async deleteHome(id: number): Promise<void> {
+		// Skip deletion if this is the only home
+		const homeStore = this.db.transaction(Stores.HOMES, 'readonly').objectStore(Stores.HOMES);
+		const homes = await homeStore.getAll();
+		if (homes.length <= 1) {
+			return;
+		}
+
+		const homeStoreRW = this.db.transaction(Stores.HOMES, 'readwrite').objectStore(Stores.HOMES);
+		await homeStoreRW.delete(id);
+
+		const localStore = this.db.transaction(Stores.LOCAL, 'readwrite').objectStore(Stores.LOCAL);
 		const lastHomeIDResult = await localStore.get('lastHomeID');
 		const lastHomeID = lastHomeIDResult?.value;
 
-		if (lastHomeID === undefined) {
-			return null;
+		if (lastHomeID === id) {
+			await localStore.put({ key: 'lastHomeID', value: undefined });
 		}
-
-		const homeStore = this.db.transaction(Stores.HOMES, 'readonly').objectStore(Stores.HOMES);
-		const home = await homeStore.get(lastHomeID);
-		return home || null;
-	}
-
-	async addHome(name: string): Promise<Home> {
-		const homeStore = this.db.transaction(Stores.HOMES, 'readwrite').objectStore(Stores.HOMES);
-		const newHomeID = await homeStore.add({ name });
-		return { id: newHomeID as number, name };
 	}
 }
 
