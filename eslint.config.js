@@ -21,6 +21,7 @@ export default defineConfig([
     rules: {
       "semi": ["error", "always"],
       "indent": ["error", "tab"],
+      "quotes": ["error", "single"],
     },
   },
 ])
