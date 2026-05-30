@@ -1,7 +1,20 @@
 import { Link } from 'react-router';
 
-function Welcome() {
+import type { Home } from '../services';
+import HomeSelector from './HomeSelector';
+
+function Welcome({
+	isLoaded,
+	home,
+	homes,
+}: {
+	isLoaded: boolean;
+	home: Home | null;
+	homes: Home[];
+	addHome: (name: string) => Promise<void>;
+}) {
 	return <>
+		<HomeSelector isLoaded={isLoaded} home={home} homes={homes} />
 		<h1>Lighthouse</h1>
 		<h2>Welcome to Lighthouse!</h2>
 		<ul className="">
