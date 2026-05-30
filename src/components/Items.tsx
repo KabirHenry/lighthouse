@@ -1,6 +1,9 @@
+import { useTranslation } from 'react-i18next';
+
 function Items() {
+	const { t } = useTranslation();
 	return <>
-		Items
+		{t('pages.items')}
 	</>;
 }
 

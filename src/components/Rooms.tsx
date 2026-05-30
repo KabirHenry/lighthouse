@@ -1,6 +1,9 @@
+import { useTranslation } from 'react-i18next';
+
 function Rooms() {
+	const { t } = useTranslation();
 	return <>
-		Rooms
+		{t('pages.rooms')}
 	</>;
 }
 

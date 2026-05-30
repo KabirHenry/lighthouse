@@ -1,10 +1,12 @@
 import { Link } from 'react-router';
 import { Container, Dropdown } from 'react-bootstrap';
 import { BarLoader } from 'react-spinners';
+import { useTranslation } from 'react-i18next';
 
 import useHomesContext from '../hooks/useHomesContext';
 
 function HomeSelector() {
+	const { t } = useTranslation();
 	const { isLoaded, home, homes } = useHomesContext();
 
 	if (!isLoaded) {
@@ -26,7 +28,7 @@ function HomeSelector() {
 					</Dropdown.ItemText>
 				))}
 				<Dropdown.Divider />
-				<Dropdown.Item as={Link} to="/add-home">Add Home</Dropdown.Item>
+				<Dropdown.Item as={Link} to="/add-home">{t('homeSelector.addHome')}</Dropdown.Item>
 			</Dropdown.Menu>
 		</Dropdown>
 	</Container>;

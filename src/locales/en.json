@@ -1,0 +1,30 @@
+{
+	"app": {
+		"name": "Lighthouse"
+	},
+	"nav": {
+		"items": "Items",
+		"rooms": "Rooms",
+		"backup": "Backup",
+		"about": "About"
+	},
+	"home": {
+		"title": "Lighthouse",
+		"welcome": "Welcome to Lighthouse!"
+	},
+	"homeSelector": {
+		"addHome": "Add Home"
+	},
+	"pages": {
+		"about": "About",
+		"items": "Items",
+		"rooms": "Rooms",
+		"backup": "Backup"
+	},
+	"errors": {
+		"notFound": {
+			"title": "404 - Not Found",
+			"message": "What you are looking for does not exist. :("
+		}
+	}
+}
