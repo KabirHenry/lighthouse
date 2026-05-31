@@ -1,18 +1,45 @@
+import { Button } from 'react-bootstrap';
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
-import HomeSelector from './HomeSelector';
+import './HomePage.css';
+import HomeIcon from '../assets/home.svg';
 
 function HomePage() {
+	const { t } = useTranslation();
 	return <>
-		<HomeSelector/>
-		<h1>Lighthouse</h1>
-		<h2>Welcome to Lighthouse!</h2>
-		<ul className="">
-			<li><Link to="/items">Items</Link></li>
-			<li><Link to="/rooms">Rooms</Link></li>
-			<li><Link to="/backup">Backup</Link></li>
-			<li><Link to="/about">About</Link></li>
-		</ul>
+		<div className="align-self-end">
+			<Link to="/homes">
+				<Button variant="icon">
+					<img
+						style={{
+							width: '100%',
+							height: '100%',
+						}}
+						src={HomeIcon}
+						alt={t('home.home')}
+					/>
+				</Button>
+			</Link>
+		</div>
+		<h1>{t('home.title')}</h1>
+		<div className="home-buttons d-flex flex-column align-items-center">
+			<Link to="/items">
+				<Button>{t('pages.items')}</Button>
+			</Link>
+			<Link to="/rooms">
+				<Button>{t('pages.rooms')}</Button>
+			</Link>
+			<Link to="/reminders">
+				<Button>{t('pages.reminders')}</Button>
+			</Link>
+			<Link to="/backup">
+				<Button>{t('pages.backup')}</Button>
+			</Link>
+			<Link to="/about">
+				<Button>{t('pages.about')}</Button>
+			</Link>
+		</div>
 	</>;
 }
 

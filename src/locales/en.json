@@ -10,7 +10,8 @@
 	},
 	"home": {
 		"title": "Lighthouse",
-		"welcome": "Welcome to Lighthouse!"
+		"welcome": "Welcome to Lighthouse!",
+		"home": "Home"
 	},
 	"homeSelector": {
 		"addHome": "Add Home"
@@ -19,6 +20,7 @@
 		"about": "About",
 		"items": "Items",
 		"rooms": "Rooms",
+		"reminders": "Reminders",
 		"backup": "Backup"
 	},
 	"errors": {

@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router';
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
+import '@fontsource/silkscreen/400.css';
 
 import './index.css';
 import './i18n.ts';

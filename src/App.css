@@ -1,0 +1,77 @@
+:root {
+  --colour-bg: #000000;
+  --colour-icons: #ffffff;
+  --colour-title: #deaa00;
+  --colour-text: #d5e3ffeb;
+  --colour-drop-shadow: #ffe78740;
+  --colour-button: #d5d5d533;
+  --colour-button-border: #d5d5d5ed;
+}
+
+body {
+  background-color: var(--colour-bg);
+  color: var(--colour-text);
+  font-family: Silkscreen, "Courier New", Courier, monospace;
+}
+
+main {
+  padding: 20px 24px !important;
+}
+
+h1 {
+  color: var(--colour-title);
+  font-size: 48px;
+  margin-top: 16.28px;
+  margin-bottom: 30px;
+}
+
+.btn {
+  position: relative;
+  border-radius: 15px;
+  background: var(--colour-button);
+  border: none;
+  overflow: hidden;
+  color: var(--colour-text);
+  font-size: 26px;
+  text-transform: uppercase;
+  padding: 6px 20px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  height: 70px;
+  width: 70px;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 13.9px;
+  box-shadow:
+    inset 0 1px 0.5px var(--colour-button-border),
+    inset 0 -1px 0.5px var(--colour-button-border);
+}
+
+.btn:hover,
+.btn:active,
+.btn:focus,
+.btn.active {
+  transition: background-color brightness 0.2s ease-in-out;
+  background: var(--colour-button) !important;
+  filter: brightness(120%) !important;
+}
+
+.btn:hover::before,
+.btn:active::before,
+.btn:focus::before,
+.btn.active::before {
+  transition: box-shadow 0.2s ease-in-out;
+  box-shadow:
+    inset 0 1px 0.5px var(--colour-button-border),
+    inset 0 -1px 0.5px var(--colour-button-border),
+    inset 0 0 3px var(--colour-button-border);
+}
