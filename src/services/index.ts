@@ -69,6 +69,8 @@ export class HomeService {
 async function initDB() {
 	return openDB(DB_NAME, DB_VERSION, {
 		upgrade(db, _oldVersion, _newVersion, transaction) {
+			// TODO: Add migration logic here if needed in the future.
+			// Right now we're still building the app.
 			for (const storeName of Array.from(db.objectStoreNames)) {
 				db.deleteObjectStore(storeName);
 			}
