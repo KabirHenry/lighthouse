@@ -4,6 +4,7 @@ import { Container } from 'react-bootstrap';
 import './App.css';
 
 import HomesProvider from './components/HomesContext';
+import Homes from './components/Homes';
 import HomePage from './components/HomePage';
 import NotFound from './components/NotFound';
 import Items from './components/Items';
@@ -23,6 +24,7 @@ function App() {
 					<Route path="/reminders" element={<Reminders/>} />
 					<Route path="/backup" element={<Backup/>} />
 					<Route path="/about" element={<About/>} />
+					<Route path="/Homes" element={<Homes/>} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Container>
