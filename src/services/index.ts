@@ -112,9 +112,9 @@ export class HomeService {
 		return { homes, currentHome };
 	}
 
-	async addHome(name: string): Promise<void> {
+	async addHome(name: string, description?: string): Promise<HomeID> {
 		const homeStore = this.db.transaction(Stores.HOMES, 'readwrite').objectStore(Stores.HOMES);
-		await homeStore.add({ name } as Home);
+		return homeStore.add({ name, description } as Home);
 	}
 
 	async deleteHome(id: HomeID): Promise<void> {
