@@ -11,7 +11,8 @@
   "home": {
     "title": "Lighthouse",
     "welcome": "Welcome to Lighthouse!",
-    "home": "Home"
+    "home": "Home",
+    "back": "Back"
   },
   "homeSelector": {
     "addHome": "Add Home"

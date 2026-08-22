@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 
-import HomeIcon from '../assets/home.svg';
+import BackIcon from '../assets/back.svg';
 import Button from './Button';
 import useHomesContext from '../hooks/useHomesContext';
 
@@ -12,14 +12,14 @@ function Homes() {
 	return <>
 		<div className="align-self-end">
 			<Link to="/">
-				<Button variant="icon">
+				<Button variant="icon" className='bare'>
 					<img
 						style={{
 							width: '100%',
 							height: '100%',
 						}}
-						src={HomeIcon}
-						alt={t('home.home')}
+						src={BackIcon}
+						alt={t('home.back')}
 					/>
 				</Button>
 			</Link>

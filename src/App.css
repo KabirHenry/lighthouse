@@ -37,6 +37,18 @@ h1 {
   padding: 6px 20px;
 }
 
+.btn.bare,
+.btn.bare:hover,
+.btn.bare:focus,
+.btn.bare:active {
+  filter: brightness(100%) !important;
+  background: none !important;
+}
+
+.btn.bare::before {
+  box-shadow: none !important;
+}
+
 .btn-icon {
   display: flex;
   align-items: center;
