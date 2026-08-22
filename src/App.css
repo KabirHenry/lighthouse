@@ -37,6 +37,11 @@ h1 {
   padding: 6px 20px;
 }
 
+.btn:disabled {
+  filter: brightness(75%) !important;
+  background: var(--colour-button) !important;
+}
+
 .btn.bare,
 .btn.bare:hover,
 .btn.bare:focus,
