@@ -1,4 +1,4 @@
-import { type IDBPDatabase, openDB } from 'idb';
+import { type DBSchema, type IDBPDatabase, openDB } from 'idb';
 
 const DB_NAME = 'LightHouseDB';
 const DB_VERSION = 4;
@@ -11,6 +11,8 @@ enum Stores {
 	PICTURES = 'pictures',
 	LOCAL = 'local',
 }
+
+const LAST_HOME_ID_KEY = 'lastHomeID' as const;
 
 export async function getHomeService() {
 	const db = await initDB();
@@ -59,17 +61,51 @@ export type Item = {
 	pictureID?: PictureID;
 };
 
-export class HomeService {
-	private db: IDBPDatabase;
+type LastHomeIDEntry = { key: typeof LAST_HOME_ID_KEY; value: HomeID | undefined };
+type UnknownLocalEntry = { key: string; value: unknown };
+type LocalEntry = LastHomeIDEntry | UnknownLocalEntry;
 
-	constructor(db: IDBPDatabase) {
+interface LighthouseDBSchema extends DBSchema {
+	[Stores.HOMES]: {
+		key: HomeID;
+		value: Home;
+	};
+	[Stores.ROOMS]: {
+		key: RoomID;
+		value: Room;
+		indexes: { homeID: HomeID; pictureID: PictureID };
+	};
+	[Stores.LOCATIONS]: {
+		key: LocationID;
+		value: Location;
+		indexes: { roomID: RoomID; pictureID: PictureID };
+	};
+	[Stores.ITEMS]: {
+		key: ItemID;
+		value: Item;
+		indexes: { locationID: LocationID; pictureID: PictureID };
+	};
+	[Stores.PICTURES]: {
+		key: PictureID;
+		value: Picture;
+	};
+	[Stores.LOCAL]: {
+		key: LocalEntry['key'];
+		value: LocalEntry;
+	};
+}
+
+export class HomeService {
+	private db: IDBPDatabase<LighthouseDBSchema>;
+
+	constructor(db: IDBPDatabase<LighthouseDBSchema>) {
 		this.db = db;
 	}
 
 	async homes(): Promise<{ homes: Home[]; currentHome: Home }> {
 		const tx = this.db.transaction([Stores.HOMES, Stores.LOCAL], 'readonly');
 		const homes = await tx.objectStore(Stores.HOMES).getAll();
-		const lastHomeIDResult = await tx.objectStore(Stores.LOCAL).get('lastHomeID');
+		const lastHomeIDResult = await tx.objectStore(Stores.LOCAL).get(LAST_HOME_ID_KEY);
 		const lastHomeID = lastHomeIDResult?.value;
 
 		const currentHome = homes.find((home) => home.id === lastHomeID) || homes[0];
@@ -78,10 +114,10 @@ export class HomeService {
 
 	async addHome(name: string): Promise<void> {
 		const homeStore = this.db.transaction(Stores.HOMES, 'readwrite').objectStore(Stores.HOMES);
-		await homeStore.add({ name });
+		await homeStore.add({ name } as Home);
 	}
 
-	async deleteHome(id: number): Promise<void> {
+	async deleteHome(id: HomeID): Promise<void> {
 		const tx = this.db.transaction([Stores.HOMES, Stores.LOCAL], 'readwrite');
 		const homeStore = tx.objectStore(Stores.HOMES);
 
@@ -94,11 +130,11 @@ export class HomeService {
 		await homeStore.delete(id);
 
 		const localStore = tx.objectStore(Stores.LOCAL);
-		const lastHomeIDResult = await localStore.get('lastHomeID');
+		const lastHomeIDResult = await localStore.get(LAST_HOME_ID_KEY);
 		const lastHomeID = lastHomeIDResult?.value;
 
 		if (lastHomeID === id) {
-			await localStore.put({ key: 'lastHomeID', value: undefined });
+			await localStore.put({ key: LAST_HOME_ID_KEY, value: undefined });
 		}
 
 		await tx.done;
@@ -111,8 +147,8 @@ export class HomeService {
 
 	async addRoom(homeID: HomeID, name: string, description?: string, pictureID?: PictureID): Promise<RoomID> {
 		const roomStore = this.db.transaction(Stores.ROOMS, 'readwrite').objectStore(Stores.ROOMS);
-		const id = await roomStore.add({ homeID, name, description, pictureID });
-		return id as RoomID;
+		const id = await roomStore.add({ homeID, name, description, pictureID } as Room);
+		return id;
 	}
 
 	async updateRoom(id: RoomID, updates: Partial<Omit<Room, 'id'>>): Promise<void> {
@@ -166,8 +202,8 @@ export class HomeService {
 		pictureID?: PictureID,
 	): Promise<LocationID> {
 		const locationStore = this.db.transaction(Stores.LOCATIONS, 'readwrite').objectStore(Stores.LOCATIONS);
-		const id = await locationStore.add({ roomID, name, description, pictureID });
-		return id as LocationID;
+		const id = await locationStore.add({ roomID, name, description, pictureID } as Location);
+		return id;
 	}
 
 	async updateLocation(id: LocationID, updates: Partial<Omit<Location, 'id'>>): Promise<void> {
@@ -208,8 +244,8 @@ export class HomeService {
 
 	async addItem(locationID: LocationID, name: string, description?: string, pictureID?: PictureID): Promise<ItemID> {
 		const itemStore = this.db.transaction(Stores.ITEMS, 'readwrite').objectStore(Stores.ITEMS);
-		const id = await itemStore.add({ locationID, name, description, pictureID });
-		return id as ItemID;
+		const id = await itemStore.add({ locationID, name, description, pictureID } as Item);
+		return id;
 	}
 
 	async updateItem(id: ItemID, updates: Partial<Omit<Item, 'id'>>): Promise<void> {
@@ -245,8 +281,8 @@ export class HomeService {
 
 	async addPicture(mimeType: string, data: Blob): Promise<PictureID> {
 		const pictureStore = this.db.transaction(Stores.PICTURES, 'readwrite').objectStore(Stores.PICTURES);
-		const id = await pictureStore.add({ mimeType, data });
-		return id as PictureID;
+		const id = await pictureStore.add({ mimeType, data } as Picture);
+		return id;
 	}
 
 	async deletePicture(id: PictureID): Promise<void> {
@@ -256,7 +292,7 @@ export class HomeService {
 }
 
 async function initDB() {
-	return openDB(DB_NAME, DB_VERSION, {
+	return openDB<LighthouseDBSchema>(DB_NAME, DB_VERSION, {
 		upgrade(db, _oldVersion, _newVersion, transaction) {
 			// TODO: Add migration logic here if needed in the future.
 			// Right now we're still building the app.
@@ -284,14 +320,14 @@ async function initDB() {
 
 			homeStore.getAll().then((homes) => {
 				if (homes.length === 0) {
-					homeStore.add({ name: 'My Home' });
+					homeStore.add({ name: 'My Home' } as Home);
 				}
 			});
 
 			const localStore = transaction.objectStore(Stores.LOCAL);
-			localStore.get('lastHomeID').then((result) => {
+			localStore.get(LAST_HOME_ID_KEY).then((result) => {
 				if (result === undefined) {
-					localStore.add({ key: 'lastHomeID', value: 1 });
+					localStore.add({ key: LAST_HOME_ID_KEY, value: 1 as HomeID });
 				}
 			});
 		},

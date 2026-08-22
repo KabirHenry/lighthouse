@@ -2,7 +2,7 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 
 import HomesStateContext, { type HomesContextValue } from '../context/homesStateContext';
-import { getHomeService, type Home, type HomeService } from '../services';
+import { getHomeService, type Home, type HomeID, type HomeService } from '../services';
 
 function HomesProvider({ children }: { children: React.ReactNode }) {
 	const [homeService, setHomeService] = useState<HomeService | null>(null);
@@ -30,7 +30,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		await reloadHomes();
 	};
 
-	const deleteHome = async (id: number) => {
+	const deleteHome = async (id: HomeID) => {
 		if (!homeService) {
 			return;
 		}
