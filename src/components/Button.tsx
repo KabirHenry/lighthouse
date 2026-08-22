@@ -2,7 +2,7 @@ function Button({
 	variant = 'text',
 	children
 }: {
-	variant: 'icon' | 'text',
+	variant?: 'icon' | 'text',
 	children: React.ReactNode
 }) {
 	return <button className={`btn btn-${variant}`}>{children}</button>;

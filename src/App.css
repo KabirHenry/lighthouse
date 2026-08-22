@@ -75,3 +75,7 @@ h1 {
     inset 0 -1px 0.5px var(--colour-button-border),
     inset 0 0 3px var(--colour-button-border);
 }
+
+.main-buttons {
+  gap: 30px;
+}
