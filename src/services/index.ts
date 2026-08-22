@@ -67,11 +67,9 @@ export class HomeService {
 	}
 
 	async homes(): Promise<{ homes: Home[]; currentHome: Home }> {
-		const homeStore = this.db.transaction(Stores.HOMES, 'readonly').objectStore(Stores.HOMES);
-		const homes = await homeStore.getAll();
-
-		const localStore = this.db.transaction(Stores.LOCAL, 'readonly').objectStore(Stores.LOCAL);
-		const lastHomeIDResult = await localStore.get('lastHomeID');
+		const tx = this.db.transaction([Stores.HOMES, Stores.LOCAL], 'readonly');
+		const homes = await tx.objectStore(Stores.HOMES).getAll();
+		const lastHomeIDResult = await tx.objectStore(Stores.LOCAL).get('lastHomeID');
 		const lastHomeID = lastHomeIDResult?.value;
 
 		const currentHome = homes.find((home) => home.id === lastHomeID) || homes[0];
@@ -84,23 +82,26 @@ export class HomeService {
 	}
 
 	async deleteHome(id: number): Promise<void> {
+		const tx = this.db.transaction([Stores.HOMES, Stores.LOCAL], 'readwrite');
+		const homeStore = tx.objectStore(Stores.HOMES);
+
 		// Skip deletion if this is the only home
-		const homeStore = this.db.transaction(Stores.HOMES, 'readonly').objectStore(Stores.HOMES);
 		const homes = await homeStore.getAll();
 		if (homes.length <= 1) {
 			return;
 		}
 
-		const homeStoreRW = this.db.transaction(Stores.HOMES, 'readwrite').objectStore(Stores.HOMES);
-		await homeStoreRW.delete(id);
+		await homeStore.delete(id);
 
-		const localStore = this.db.transaction(Stores.LOCAL, 'readwrite').objectStore(Stores.LOCAL);
+		const localStore = tx.objectStore(Stores.LOCAL);
 		const lastHomeIDResult = await localStore.get('lastHomeID');
 		const lastHomeID = lastHomeIDResult?.value;
 
 		if (lastHomeID === id) {
 			await localStore.put({ key: 'lastHomeID', value: undefined });
 		}
+
+		await tx.done;
 	}
 
 	async rooms(homeID: HomeID): Promise<Room[]> {
