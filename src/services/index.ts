@@ -16,9 +16,46 @@ export async function getHomeService() {
 	return new HomeService(db);
 }
 
+export type HomeID = number & { readonly __brand: 'HomeID' };
+export type PictureID = number & { readonly __brand: 'PictureID' };
+export type RoomID = number & { readonly __brand: 'RoomID' };
+export type LocationID = number & { readonly __brand: 'LocationID' };
+export type ItemID = number & { readonly __brand: 'ItemID' };
+
 export type Home = {
-	id: number;
+	id: HomeID;
+	description?: string;
 	name: string;
+};
+
+export type Picture = {
+	id: PictureID;
+	mimeType: string;
+	data: Blob;
+}
+
+export type Room = {
+	id: RoomID;
+	homeID: HomeID;
+	name: string;
+	description?: string;
+	picture?: PictureID;
+};
+
+export type Location = {
+	id: LocationID;
+	roomID: RoomID;
+	name: string;
+	description?: string;
+	picture?: PictureID;
+};
+
+export type Item = {
+	id: ItemID;
+	locationID: LocationID;
+	name: string;
+	description?: string;
+	picture?: PictureID;
 };
 
 export class HomeService {
