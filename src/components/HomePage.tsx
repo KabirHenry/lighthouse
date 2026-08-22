@@ -3,23 +3,13 @@ import { useTranslation } from 'react-i18next';
 
 import HomeIcon from '../assets/home.svg';
 import Button from './Button';
+import { IconLink } from './IconLink';
 
 function HomePage() {
 	const { t } = useTranslation();
 	return <>
 		<div className="align-self-end">
-			<Link to="/homes">
-				<Button variant="icon">
-					<img
-						style={{
-							width: '100%',
-							height: '100%',
-						}}
-						src={HomeIcon}
-						alt={t('home.home')}
-					/>
-				</Button>
-			</Link>
+			<IconLink to="/homes" src={HomeIcon} alt={t('home.home')} />
 		</div>
 		<h1>{t('home.title')}</h1>
 		<div className="main-buttons d-flex flex-column align-items-center">
