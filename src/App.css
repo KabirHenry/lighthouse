@@ -120,6 +120,7 @@ h1 {
 .btn:active,
 .btn:focus,
 .btn.active {
+  color: var(--colour-text) !important;
   transition: background-color brightness 0.2s ease-in-out;
   background: var(--colour-button) !important;
   filter: brightness(120%) !important;
