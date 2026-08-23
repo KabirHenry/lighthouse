@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Outlet } from 'react-router';
+import { Outlet, Link } from 'react-router';
 
 import PlusIcon from '../assets/plus.svg';
 import BackLeftIcon from '../assets/back-left.svg';
@@ -57,7 +57,9 @@ function Rooms() {
 							/>
 						</div>
 						<div className='room-data'>
-							<Button>{room.name}</Button>
+							<Link to={`/rooms/${room.id}`}>
+								<Button>{room.name}</Button>
+							</Link>
 							<div className='mt-1'>{locationCount} locations</div>
 							<div>{itemCount} items</div>
 						</div>
