@@ -11,6 +11,7 @@ import LightHousePixel from './LightHousePixel';
 function Homes() {
 	const { t } = useTranslation();
 	const { homes } = useHomesContext();
+	const isSingleHome = homes.length === 1;
 	return <>
 		<div className="align-self-end">
 			<IconLink to="/" src={BackRightIcon} alt={t('home.back')} className='bare' />
@@ -36,6 +37,7 @@ function Homes() {
 								src={DustbinIcon}
 								scale='70%'
 								alt={t('homes.delete')}
+								disabled={isSingleHome}
 								className='bare d-none d-md-block'
 							/>
 						</div>
@@ -46,6 +48,7 @@ function Homes() {
 								src={DustbinIcon}
 								scale='70%'
 								alt={t('homes.delete')}
+								disabled={isSingleHome}
 								className='bare d-md-none'
 							/>
 							<IconLink

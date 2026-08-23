@@ -6,6 +6,7 @@ export function IconLink({
 	to,
 	src,
 	alt,
+	disabled = false,
 	className,
 	style,
 	onClick,
@@ -14,6 +15,7 @@ export function IconLink({
 	to: string;
 	src: string;
 	alt: string;
+	disabled?: boolean;
 	className?: string;
 	style?: React.CSSProperties;
 	onClick?: () => void,
@@ -33,14 +35,20 @@ export function IconLink({
 			variant="icon"
 			className={className}
 			style={style}
+			disabled={disabled}
 			onClick={onClick}
 		>
 			{image}
 		</Button>;
 	}
 
-	return <Link to={to}>
-		<Button variant="icon" className={className} style={style}>
+	return <Link to={!disabled ? to : '' }>
+		<Button
+			variant="icon"
+			className={className}
+			style={style}
+			disabled={disabled}
+		>
 			{image}
 		</Button>
 	</Link>;
