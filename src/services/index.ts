@@ -117,6 +117,11 @@ export class HomeService {
 		return homeStore.add({ name, description } as Home);
 	}
 
+	async setActiveHome(id: HomeID): Promise<void> {
+		const localStore = this.db.transaction(Stores.LOCAL, 'readwrite').objectStore(Stores.LOCAL);
+		await localStore.put({ key: ACTIVE_HOME_ID_KEY, value: id });
+	}
+
 	async updateHome(id: HomeID, updates: Partial<Omit<Home, 'id'>>): Promise<void> {
 		const homeStore = this.db.transaction(Stores.HOMES, 'readwrite').objectStore(Stores.HOMES);
 		const home = await homeStore.get(id);

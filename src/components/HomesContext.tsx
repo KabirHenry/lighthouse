@@ -49,6 +49,15 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		await reloadHomes();
 	};
 
+	const setActiveHome = async (id: HomeID) => {
+		if (!homeService) {
+			return;
+		}
+
+		await homeService.setActiveHome(id);
+		await reloadHomes();
+	};
+
 	useEffect(() => {
 		let isCancelled = false;
 
@@ -83,6 +92,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		addHome,
 		updateHome,
 		deleteHome,
+		setActiveHome,
 	};
 
 	return <HomesStateContext.Provider value={homesState}>{children}</HomesStateContext.Provider>;

@@ -20,14 +20,6 @@ main {
   padding: 20px 24px !important;
 }
 
-.btn.confirm {
-  color: var(--colour-confirm) !important;
-}
-
-.btn.cancel {
-  color: var(--colour-cancel) !important;
-}
-
 h1 {
   color: var(--colour-title);
   font-size: 48px;
@@ -73,6 +65,14 @@ h1 {
   font-size: 26px;
   text-transform: uppercase;
   padding: 6px 20px;
+}
+
+.btn.confirm {
+  color: var(--colour-confirm) !important;
+}
+
+.btn.cancel {
+  color: var(--colour-cancel) !important;
 }
 
 .btn:disabled {

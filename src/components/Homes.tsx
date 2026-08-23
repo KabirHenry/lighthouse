@@ -1,18 +1,30 @@
 import { useTranslation } from 'react-i18next';
-import { Outlet } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 import PlusIcon from '../assets/plus.svg';
 import DustbinIcon from '../assets/dustbin.svg';
 import BackRightIcon from '../assets/back-right.svg';
 import PencilIcon from '../assets/pencil.svg';
 import Button from './Button';
 import useHomesContext from '../hooks/useHomesContext';
+import type { HomeID } from '../services';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
 
 function Homes() {
 	const { t } = useTranslation();
-	const { homes } = useHomesContext();
+	const navigate = useNavigate();
+	const { home: activeHome, homes, setActiveHome } = useHomesContext();
 	const isSingleHome = homes.length === 1;
+
+	const selectHome = async (id: HomeID) => {
+		if (id === activeHome?.id) {
+			return;
+		}
+
+		await setActiveHome(id);
+		navigate('/');
+	};
+
 	return <>
 		<div className="align-self-end">
 			<IconLink to="/" src={BackRightIcon} alt={t('home.back')} className='bare' />
@@ -42,7 +54,12 @@ function Homes() {
 								className='bare d-none d-md-block'
 							/>
 						</div>
-						<Button>{home.name}</Button>
+						<Button
+							onClick={() => selectHome(home.id)}
+						>
+							{home.id === activeHome?.id && '🏠 '}
+							{home.name}
+						</Button>
 						<div className="main-list-item-actions-after">
 							<IconLink
 								to={`/homes/${home.id}/delete`}
