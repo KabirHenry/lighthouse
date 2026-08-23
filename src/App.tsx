@@ -5,6 +5,7 @@ import './App.css';
 
 import HomesProvider from './components/HomesContext';
 import Homes from './components/Homes';
+import AddHomeModal from './components/AddHomeModal';
 import HomePage from './components/HomePage';
 import NotFound from './components/NotFound';
 import Items from './components/Items';
@@ -24,7 +25,9 @@ function App() {
 					<Route path="/reminders" element={<Reminders/>} />
 					<Route path="/backup" element={<Backup/>} />
 					<Route path="/about" element={<About/>} />
-					<Route path="/Homes" element={<Homes/>} />
+					<Route path="/homes" element={<Homes/>}>
+						<Route path="new" element={<AddHomeModal/>} />
+					</Route>
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Container>

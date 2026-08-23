@@ -21,13 +21,14 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		setHome(allHomes.currentHome);
 	};
 
-	const addHome = async (name: string) => {
+	const addHome = async (name: string, description?: string) => {
 		if (!homeService) {
-			return;
+			return undefined;
 		}
 
-		await homeService.addHome(name);
+		const id = await homeService.addHome(name, description);
 		await reloadHomes();
+		return id;
 	};
 
 	const deleteHome = async (id: HomeID) => {

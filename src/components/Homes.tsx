@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Outlet } from 'react-router';
 import PlusIcon from '../assets/plus.svg';
 import DustbinIcon from '../assets/dustbin.svg';
 import BackRightIcon from '../assets/back-right.svg';
@@ -63,6 +64,7 @@ function Homes() {
 				))
 			}
 		</div>
+		<Outlet/>
 	</>;
 }
 

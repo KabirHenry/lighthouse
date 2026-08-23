@@ -6,7 +6,7 @@ export type HomesContextValue = {
 	isLoaded: boolean;
 	home: Home | null;
 	homes: Home[];
-	addHome: (name: string) => Promise<void>;
+	addHome: (name: string, description?: string) => Promise<HomeID | undefined>;
 	deleteHome: (id: HomeID) => Promise<void>;
 };
 
