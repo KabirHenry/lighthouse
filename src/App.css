@@ -149,7 +149,7 @@ h1 {
   align-self: stretch;
 }
 
-.main-title h2 {
+.main-title .subheading {
   position: absolute;
   top: -25px;
   left: 50%;
@@ -203,7 +203,7 @@ h1 {
 
 .main-list-item > .btn {
   grid-column: 2;
-  max-width: 190px;
+  min-width: 200px;
   white-space: normal;
   overflow-wrap: break-word;
   hyphens: auto;

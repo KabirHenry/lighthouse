@@ -45,6 +45,12 @@ export type Room = {
 	pictureID?: PictureID;
 };
 
+export type RoomInfo = {
+	room: Room;
+	locationCount: number;
+	itemCount: number;
+};
+
 export type Location = {
 	id: LocationID;
 	roomID: RoomID;
@@ -155,9 +161,24 @@ export class HomeService {
 		await tx.done;
 	}
 
-	async rooms(homeID: HomeID): Promise<Room[]> {
-		const roomStore = this.db.transaction(Stores.ROOMS, 'readonly').objectStore(Stores.ROOMS);
-		return roomStore.index('homeID').getAll(homeID);
+	async rooms(homeID: HomeID): Promise<RoomInfo[]> {
+		const tx = this.db.transaction([Stores.ROOMS, Stores.LOCATIONS, Stores.ITEMS], 'readonly');
+		const rooms = await tx.objectStore(Stores.ROOMS).index('homeID').getAll(homeID);
+		const locationIndex = tx.objectStore(Stores.LOCATIONS).index('roomID');
+		const itemIndex = tx.objectStore(Stores.ITEMS).index('locationID');
+
+		return Promise.all(
+			rooms.map(async (room) => {
+				const locations = await locationIndex.getAll(room.id);
+				const itemCounts = await Promise.all(locations.map((location) => itemIndex.count(location.id)));
+
+				return {
+					room,
+					locationCount: locations.length,
+					itemCount: itemCounts.reduce((total, count) => total + count, 0),
+				};
+			}),
+		);
 	}
 
 	async addRoom(homeID: HomeID, name: string, description?: string, pictureID?: PictureID): Promise<RoomID> {

@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import Button from './Button';
 
 export function IconLink({
-	to,
+	to = '',
 	src,
 	alt,
 	disabled = false,
@@ -12,7 +12,7 @@ export function IconLink({
 	onClick,
 	scale = '100%',
 }: {
-	to: string;
+	to?: string;
 	src: string;
 	alt: string;
 	disabled?: boolean;

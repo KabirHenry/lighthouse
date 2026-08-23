@@ -2,14 +2,17 @@ import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 
 import PlusIcon from '../assets/plus.svg';
-import BackRightIcon from '../assets/back-right.svg';
+import BackLeftIcon from '../assets/back-left.svg';
 import DustbinIcon from '../assets/dustbin.svg';
 import PencilIcon from '../assets/pencil.svg';
+import RoomIcon from '../assets/room.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
 import useRoomsContext from '../hooks/useRoomsContext';
+
+import './Rooms.css';
 
 function Rooms() {
 	const { t } = useTranslation();
@@ -18,7 +21,7 @@ function Rooms() {
 
 	return <>
 		<div className="align-self-end">
-			<IconLink to="/" src={BackRightIcon} alt={t('home.back')} className='bare' />
+			<IconLink to="/" src={BackLeftIcon} alt={t('home.back')} className='bare' />
 		</div>
 		<h1 className="main-title">
 			<div className='main-title-actions-before'>
@@ -30,13 +33,13 @@ function Rooms() {
 			<div className="main-title-actions-after">
 				<IconLink to="/rooms/new" src={PlusIcon} alt={t('rooms.add')} scale='65%' />
 			</div>
-			<h2>
+			<div className="subheading">
 				{activeHome?.name}
-			</h2>
+			</div>
 		</h1>
-		<div className="main-buttons main-list d-flex flex-column align-items-center">
+		<div className="main-buttons rooms-items main-list d-flex flex-column align-items-center">
 			{
-				rooms.map(room => (
+				rooms.map(({ room, locationCount, itemCount }) => (
 					<div className="main-list-item" key={room.id}>
 						<div className="main-list-item-actions-before">
 							<IconLink
@@ -46,22 +49,30 @@ function Rooms() {
 								alt={t('homes.delete')}
 								className='bare d-none d-md-block'
 							/>
+							<IconLink
+								to={`/rooms/${room.id}/upload`}
+								src={RoomIcon}
+								alt={t('homes.delete')}
+								className='bare room-icon'
+							/>
 						</div>
-						<Button className='bare'>
-							{room.name}
-						</Button>
+						<div className='room-data'>
+							<Button>{room.name}</Button>
+							<div className='mt-1'>{locationCount} locations</div>
+							<div>{itemCount} items</div>
+						</div>
 						<div className="main-list-item-actions-after">
 							<IconLink
 								to={`/rooms/${room.id}/delete`}
 								src={DustbinIcon}
-								scale='70%'
+								// scale='50%'
 								alt={t('homes.delete')}
 								className='bare d-md-none'
 							/>
 							<IconLink
 								to={`/rooms/${room.id}`}
 								src={PencilIcon}
-								scale='80%'
+								// scale='60%'
 								alt={t('homes.edit')}
 								className='bare'
 							/>

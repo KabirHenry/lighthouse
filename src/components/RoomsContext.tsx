@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 
 import RoomsStateContext, { type RoomsContextValue } from '../context/roomsStateContext';
 import useHomesContext from '../hooks/useHomesContext';
-import { getHomeService, type HomeService, type Room } from '../services';
+import { getHomeService, type HomeService, type RoomInfo } from '../services';
 
 function RoomsProvider({ children }: { children: React.ReactNode }) {
 	const { home } = useHomesContext();
 	const [homeService, setHomeService] = useState<HomeService | null>(null);
-	const [rooms, setRooms] = useState<Room[]>([]);
+	const [rooms, setRooms] = useState<RoomInfo[]>([]);
 
 	const isLoaded = homeService !== null && home !== null;
 
