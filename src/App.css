@@ -24,54 +24,12 @@ main {
   padding: 20px 24px !important;
 }
 
-.app-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-.app-modal {
-  border-radius: 19px;
-  margin: 170px auto 0;
-  width: calc(100% - 12px);
-  padding: 18px 9px 9px 9px;
-  color: var(--colour-modal-text);
-  background: var(--colour-modal-background);
-  font-size: 26px;
-}
-
-.app-modal-footer {
-  padding: 0 15px;
-}
-
-.app-modal .btn {
-  color: var(--colour-modal-text);
-  margin-top: 6px;
-  padding: 0;
-}
-
 .btn.confirm {
-  color: var(--colour-confirm);
+  color: var(--colour-confirm) !important;
 }
 
 .btn.cancel {
-  color: var(--colour-cancel);
-}
-
-.app-modal input[type="text"] {
-  width: 100%;
-  text-align: center;
-  padding: 10px 35px;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-  background: var(--colour-modal-input-background);
-  color: var(--colour-modal-text);
-  font-size: 26px;
-  box-shadow: 0 8px 12px -6px var(--colour-modal-input-drop-shadow);
+  color: var(--colour-cancel) !important;
 }
 
 h1 {
