@@ -2,7 +2,16 @@ import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
 import HomesStateContext, { type HomesContextValue } from '../context/homesStateContext';
-import { getHomeService, type Home, type HomeID, type HomeService, type LocationInfo, type RoomID, type RoomInfo } from '../services';
+import {
+	getHomeService,
+	type Home,
+	type HomeID,
+	type HomeService,
+	type LocationID,
+	type LocationInfo,
+	type RoomID,
+	type RoomInfo,
+} from '../services';
 
 function HomesProvider({ children }: { children: React.ReactNode }) {
 	const [homeService, setHomeService] = useState<HomeService | null>(null);
@@ -10,6 +19,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 	const [homes, setHomes] = useState<Home[]>([]);
 	const [rooms, setRooms] = useState<RoomInfo[]>([]);
 	const [locations, setLocations] = useState<LocationInfo[]>([]);
+	const [locationsRoomID, setLocationsRoomID] = useState<RoomID | null>(null);
 
 	const isLoaded = homeService !== null && home !== null;
 
@@ -78,13 +88,42 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		return id;
 	};
 
+	const deleteRoom = async (id: RoomID) => {
+		if (!homeService) {
+			return;
+		}
+
+		await homeService.deleteRoom(id);
+		await reloadRooms();
+	};
+
 	const loadLocations = useCallback(async (roomID: RoomID) => {
+		setLocationsRoomID(roomID);
 		if (!homeService) {
 			return;
 		}
 
 		setLocations(await homeService.locations(roomID));
 	}, [homeService]);
+
+	const addLocation = async (name: string, description?: string) => {
+		if (!homeService || locationsRoomID === null) {
+			return undefined;
+		}
+
+		const id = await homeService.addLocation(locationsRoomID, name, description);
+		await Promise.all([loadLocations(locationsRoomID), reloadRooms()]);
+		return id;
+	};
+
+	const deleteLocation = async (id: LocationID) => {
+		if (!homeService || locationsRoomID === null) {
+			return;
+		}
+
+		await homeService.deleteLocation(id);
+		await Promise.all([loadLocations(locationsRoomID), reloadRooms()]);
+	};
 
 	useEffect(() => {
 		let isCancelled = false;
@@ -145,7 +184,10 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		deleteHome,
 		setActiveHome,
 		addRoom,
+		deleteRoom,
 		loadLocations,
+		addLocation,
+		deleteLocation,
 	};
 
 	return <HomesStateContext.Provider value={homesState}>{children}</HomesStateContext.Provider>;

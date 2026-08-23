@@ -41,9 +41,14 @@
   "areYouSure": "Are you sure?",
   "rooms": {
     "add": "Add Room",
-    "myNewRoom": "My New Room"
+    "delete": "Delete Room",
+    "myNewRoom": "My New Room",
+    "deleteConfirm": "This will delete \"{{name}}\" and all its locations and items."
   },
   "locations": {
-    "add": "Add Location"
+    "add": "Add Location",
+    "delete": "Delete Location",
+    "myNewLocation": "My New Location",
+    "deleteConfirm": "This will delete \"{{name}}\" and all its items."
   }
 }

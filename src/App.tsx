@@ -13,7 +13,10 @@ import NotFound from './components/NotFound';
 import Items from './components/Items';
 import Rooms from './components/Rooms';
 import AddRoom from './components/modals/AddRoom';
+import DeleteRoom from './components/modals/DeleteRoom';
 import Locations from './components/Locations';
+import AddLocation from './components/modals/AddLocation';
+import DeleteLocation from './components/modals/DeleteLocation';
 import Reminders from './components/Reminders';
 import Backup from './components/Backup';
 import About from './components/About';
@@ -27,8 +30,12 @@ function App() {
 					<Route path="/items" element={<Items/>} />
 					<Route path="/rooms" element={<Rooms/>}>
 						<Route path="new" element={<AddRoom/>} />
+						<Route path=":id/delete" element={<DeleteRoom/>} />
 					</Route>
-					<Route path="/locations" element={<Locations/>} />
+					<Route path="/locations" element={<Locations/>}>
+						<Route path="new" element={<AddLocation/>} />
+						<Route path=":id/delete" element={<DeleteLocation/>} />
+					</Route>
 					<Route path="/reminders" element={<Reminders/>} />
 					<Route path="/backup" element={<Backup/>} />
 					<Route path="/about" element={<About/>} />

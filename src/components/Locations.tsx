@@ -50,10 +50,10 @@ function Locations() {
 					<div className="main-list-item" key={location.id}>
 						<div className="main-list-item-actions-before">
 							<IconLink
-								to={`/locations/${location.id}/delete`}
+								to={`/locations/${location.id}/delete?room=${roomID}`}
 								src={DustbinIcon}
 								scale='70%'
-								alt={t('homes.delete')}
+								alt={t('locations.delete')}
 								className='bare d-none d-md-block'
 							/>
 							<IconLink
@@ -70,9 +70,9 @@ function Locations() {
 						</div>
 						<div className="main-list-item-actions-after">
 							<IconLink
-								to={`/locations/${location.id}/delete`}
+								to={`/locations/${location.id}/delete?room=${roomID}`}
 								src={DustbinIcon}
-								alt={t('homes.delete')}
+								alt={t('locations.delete')}
 								className='bare d-md-none'
 							/>
 							<IconLink

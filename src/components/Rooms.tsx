@@ -44,7 +44,7 @@ function Rooms() {
 								to={`/rooms/${room.id}/delete`}
 								src={DustbinIcon}
 								scale='70%'
-								alt={t('homes.delete')}
+								alt={t('rooms.delete')}
 								className='bare d-none d-md-block'
 							/>
 							<IconLink
@@ -66,7 +66,7 @@ function Rooms() {
 								to={`/rooms/${room.id}/delete`}
 								src={DustbinIcon}
 								// scale='50%'
-								alt={t('homes.delete')}
+								alt={t('rooms.delete')}
 								className='bare d-md-none'
 							/>
 							<IconLink
