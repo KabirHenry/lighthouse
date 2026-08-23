@@ -6,16 +6,21 @@ import PencilIcon from '../assets/pencil.svg';
 import Button from './Button';
 import useHomesContext from '../hooks/useHomesContext';
 import { IconLink } from './IconLink';
+import LightHousePixel from './LightHousePixel';
 
 function Homes() {
 	const { t } = useTranslation();
 	const { homes } = useHomesContext();
-
 	return <>
 		<div className="align-self-end">
 			<IconLink to="/" src={BackRightIcon} alt={t('home.back')} className='bare' />
 		</div>
 		<h1 className="main-title">
+			<div className='main-title-actions-before'>
+				<span className="lighthouse-anchor">
+					<LightHousePixel style={{ top: '2px', left: -3 }} />
+				</span>
+			</div>
 			<span className="main-title-text">{t('pages.homes')}</span>
 			<div className="main-title-actions-after">
 				<IconLink to="/homes/new" src={PlusIcon} alt={t('homes.add')} scale='65%' />
