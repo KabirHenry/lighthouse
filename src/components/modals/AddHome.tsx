@@ -3,11 +3,11 @@ import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
-import useHomesContext from '../hooks/useHomesContext';
-import Button from './Button';
+import useHomesContext from '../../hooks/useHomesContext';
+import Button from '../Button';
 import Modal from './Modal';
 
-function AddHomeModal() {
+function AddHome() {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const { addHome } = useHomesContext();
@@ -48,4 +48,4 @@ function AddHomeModal() {
 	);
 }
 
-export default AddHomeModal;
+export default AddHome;
