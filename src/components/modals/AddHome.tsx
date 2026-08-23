@@ -1,21 +1,20 @@
 import { useState } from 'react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
 
 import useHomesContext from '../../hooks/useHomesContext';
+import useSmartBack from '../../hooks/useSmartBack';
 import Button from '../Button';
 import Modal from './Modal';
 
 function AddHome() {
 	const { t } = useTranslation();
-	const navigate = useNavigate();
 	const { addHome } = useHomesContext();
 	const [name, setName] = useState('');
 
 	const canSubmit = name.trim() !== '';
 
-	const close = () => navigate('/homes');
+	const close = useSmartBack('/homes');
 
 	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();

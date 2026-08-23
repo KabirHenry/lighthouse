@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 
 import useHomesContext from '../../hooks/useHomesContext';
+import useSmartBack from '../../hooks/useSmartBack';
 import Button from '../Button';
 import Modal from './Modal';
 
 function AddLocation() {
 	const { t } = useTranslation();
-	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const roomID = searchParams.get('room');
 	const { addLocation } = useHomesContext();
@@ -17,7 +17,7 @@ function AddLocation() {
 
 	const canSubmit = name.trim() !== '';
 
-	const close = () => navigate(`/locations?room=${roomID}`);
+	const close = useSmartBack(`/locations?room=${roomID}`);
 
 	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();

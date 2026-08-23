@@ -11,6 +11,7 @@ import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
+import useSmartBack from '../hooks/useSmartBack';
 import type { RoomID } from '../services';
 
 import './Rooms.css';
@@ -21,6 +22,7 @@ function Locations() {
 	const [searchParams] = useSearchParams();
 	const roomID = Number(searchParams.get('room')) as RoomID;
 	const room = rooms.find((info) => info.room.id === roomID)?.room;
+	const goBack = useSmartBack('/rooms');
 
 	useEffect(() => {
 		void loadLocations(roomID);
@@ -28,7 +30,7 @@ function Locations() {
 
 	return <>
 		<div className="align-self-end">
-			<IconLink to="/rooms" src={BackLeftIcon} alt={t('home.back')} className='bare' />
+			<IconLink onClick={goBack} src={BackLeftIcon} alt={t('home.back')} className='bare' />
 		</div>
 		<h1 className="main-title">
 			<div className='main-title-actions-before'>

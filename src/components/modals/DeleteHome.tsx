@@ -1,20 +1,20 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 
 import useHomesContext from '../../hooks/useHomesContext';
+import useSmartBack from '../../hooks/useSmartBack';
 import type { HomeID } from '../../services';
 import Button from '../Button';
 import Modal from './Modal';
 
 function DeleteHome() {
 	const { t } = useTranslation();
-	const navigate = useNavigate();
 	const { homes, deleteHome } = useHomesContext();
 	const { id } = useParams<{ id: string }>();
 
 	const home = homes.find((home) => home.id === Number(id));
 
-	const close = () => navigate('/homes');
+	const close = useSmartBack('/homes');
 
 	const handleConfirm = async () => {
 		if (!id) {

@@ -7,6 +7,7 @@ import BackRightIcon from '../assets/back-right.svg';
 import PencilIcon from '../assets/pencil.svg';
 import Button from './Button';
 import useHomesContext from '../hooks/useHomesContext';
+import useSmartBack from '../hooks/useSmartBack';
 import type { HomeID } from '../services';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
@@ -16,6 +17,7 @@ function Homes() {
 	const navigate = useNavigate();
 	const { home: activeHome, homes, setActiveHome } = useHomesContext();
 	const isSingleHome = homes.length === 1;
+	const goBack = useSmartBack('/');
 
 	const selectHome = async (id: HomeID) => {
 		if (id === activeHome?.id) {
@@ -28,7 +30,7 @@ function Homes() {
 
 	return <>
 		<div className="align-self-end">
-			<IconLink to="/" src={BackRightIcon} alt={t('home.back')} className='bare' />
+			<IconLink onClick={goBack} src={BackRightIcon} alt={t('home.back')} className='bare' />
 		</div>
 		<h1 className="main-title">
 			<div className='main-title-actions-before'>

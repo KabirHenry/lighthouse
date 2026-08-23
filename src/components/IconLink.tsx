@@ -30,19 +30,7 @@ export function IconLink({
 		alt={alt}
 	/>;
 
-	if (onClick) {
-		return <Button
-			variant="icon"
-			className={className}
-			style={style}
-			disabled={disabled}
-			onClick={onClick}
-		>
-			{image}
-		</Button>;
-	}
-
-	return <Link to={!disabled ? to : '' }>
+	return <Link to={!disabled ? to : '' } onClick={onClick}>
 		<Button
 			variant="icon"
 			className={className}

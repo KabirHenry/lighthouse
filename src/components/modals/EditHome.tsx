@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 
 import useHomesContext from '../../hooks/useHomesContext';
+import useSmartBack from '../../hooks/useSmartBack';
 import Button from '../Button';
 import Modal from './Modal';
 
 function EditHome() {
 	const { t } = useTranslation();
-	const navigate = useNavigate();
 	const { homes, updateHome } = useHomesContext();
 	const { id } = useParams<{ id: string }>();
 	const home = homes.find((home) => home.id === Number(id));
@@ -17,7 +17,7 @@ function EditHome() {
 
 	const shouldUpdate = name.trim() !== '' && name.trim() !== home?.name;
 
-	const close = () => navigate('/homes');
+	const close = useSmartBack('/homes');
 
 	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();

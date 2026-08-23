@@ -10,16 +10,18 @@ import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
+import useSmartBack from '../hooks/useSmartBack';
 
 import './Rooms.css';
 
 function Rooms() {
 	const { t } = useTranslation();
 	const { home: activeHome, rooms } = useHomesContext();
+	const goBack = useSmartBack('/');
 
 	return <>
 		<div className="align-self-end">
-			<IconLink to="/" src={BackLeftIcon} alt={t('home.back')} className='bare' />
+			<IconLink onClick={goBack} src={BackLeftIcon} alt={t('home.back')} className='bare' />
 		</div>
 		<h1 className="main-title">
 			<div className='main-title-actions-before'>

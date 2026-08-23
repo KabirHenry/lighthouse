@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { useParams, useSearchParams } from 'react-router';
 
 import useHomesContext from '../../hooks/useHomesContext';
+import useSmartBack from '../../hooks/useSmartBack';
 import type { LocationID } from '../../services';
 import Button from '../Button';
 import Modal from './Modal';
 
 function DeleteLocation() {
 	const { t } = useTranslation();
-	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const roomID = searchParams.get('room');
 	const { locations, deleteLocation } = useHomesContext();
@@ -16,7 +16,7 @@ function DeleteLocation() {
 
 	const location = locations.find((info) => info.location.id === Number(id))?.location;
 
-	const close = () => navigate(`/locations?room=${roomID}`);
+	const close = useSmartBack(`/locations?room=${roomID}`);
 
 	const handleConfirm = async () => {
 		if (!id) {
