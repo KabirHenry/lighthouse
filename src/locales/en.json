@@ -39,6 +39,7 @@
   "cancel": "Cancel",
   "areYouSure": "Are you sure?",
   "rooms": {
-    "add": "Add Room"
+    "add": "Add Room",
+    "myNewRoom": "My New Room"
   }
 }

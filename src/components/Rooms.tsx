@@ -2,17 +2,19 @@ import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 
 import PlusIcon from '../assets/plus.svg';
-// import DustbinIcon from '../assets/dustbin.svg';
 import BackRightIcon from '../assets/back-right.svg';
-// import PencilIcon from '../assets/pencil.svg';
-// import Button from './Button';
+import DustbinIcon from '../assets/dustbin.svg';
+import PencilIcon from '../assets/pencil.svg';
+import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
+import useRoomsContext from '../hooks/useRoomsContext';
 
 function Rooms() {
 	const { t } = useTranslation();
 	const { home: activeHome } = useHomesContext();
+	const { rooms } = useRoomsContext();
 
 	return <>
 		<div className="align-self-end">
@@ -33,7 +35,40 @@ function Rooms() {
 			</h2>
 		</h1>
 		<div className="main-buttons main-list d-flex flex-column align-items-center">
-			
+			{
+				rooms.map(room => (
+					<div className="main-list-item" key={room.id}>
+						<div className="main-list-item-actions-before">
+							<IconLink
+								to={`/rooms/${room.id}/delete`}
+								src={DustbinIcon}
+								scale='70%'
+								alt={t('homes.delete')}
+								className='bare d-none d-md-block'
+							/>
+						</div>
+						<Button className='bare'>
+							{room.name}
+						</Button>
+						<div className="main-list-item-actions-after">
+							<IconLink
+								to={`/rooms/${room.id}/delete`}
+								src={DustbinIcon}
+								scale='70%'
+								alt={t('homes.delete')}
+								className='bare d-md-none'
+							/>
+							<IconLink
+								to={`/rooms/${room.id}`}
+								src={PencilIcon}
+								scale='80%'
+								alt={t('homes.edit')}
+								className='bare'
+							/>
+						</div>
+					</div>
+				))
+			}
 		</div>
 		<Outlet/>
 	</>;
