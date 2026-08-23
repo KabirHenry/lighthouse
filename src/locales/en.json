@@ -14,8 +14,10 @@
     "home": "Home",
     "back": "Back"
   },
-  "homeSelector": {
-    "addHome": "Add Home"
+  "homes": {
+    "add": "Add Home",
+    "edit": "Edit Home",
+    "delete": "Delete Home"
   },
   "pages": {
     "about": "About",
@@ -30,7 +32,5 @@
       "title": "404 - Not Found",
       "message": "What you are looking for does not exist. :("
     }
-  },
-  "edit": "Edit",
-  "delete": "Delete"
+  }
 }
