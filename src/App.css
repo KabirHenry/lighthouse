@@ -25,6 +25,34 @@ h1 {
   margin-bottom: 30px;
 }
 
+.lighthouse-anchor {
+  position: relative;
+  display: inline-block;
+}
+
+.lighthouse-pixel {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--colour-icons);
+  animation: lighthouse-beacon 4s ease-in-out infinite;
+}
+
+@keyframes lighthouse-beacon {
+  0%,
+  100% {
+    opacity: 0.35;
+    box-shadow: 0 0 2px 1px var(--colour-drop-shadow);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 10px 4px var(--colour-drop-shadow);
+  }
+}
+
 .btn {
   position: relative;
   border-radius: 15px;
