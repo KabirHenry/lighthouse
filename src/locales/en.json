@@ -18,7 +18,8 @@
     "add": "Add Home",
     "edit": "Edit Home",
     "delete": "Delete Home",
-    "myNewHome": "My New Home"
+    "myNewHome": "My New Home",
+    "deleteConfirm": "This will delete \"{{name}}\" and all its rooms, locations, and items."
   },
   "pages": {
     "about": "About",
@@ -35,5 +36,6 @@
     }
   },
   "confirm": "Confirm",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "areYouSure": "Are you sure?"
 }

@@ -6,12 +6,8 @@
   --colour-drop-shadow: #ffe78740;
   --colour-button: #d5d5d533;
   --colour-button-border: #d5d5d5ed;
-  --colour-modal-background: #cbcbcb;
   --colour-confirm: #009d349b;
   --colour-cancel: #a100038c;
-  --colour-modal-text: #000000;
-  --colour-modal-input-background: #f3f3f3;
-  --colour-modal-input-drop-shadow: #ffddad;
 }
 
 body {

@@ -1,3 +1,10 @@
+:root {
+  --colour-modal-background: #cbcbcb;
+  --colour-modal-text: #000000;
+  --colour-modal-input-background: #f3f3f3;
+  --colour-modal-sheet-drop-shadow: #ffddad;
+}
+
 .app-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -21,6 +28,20 @@
   padding: 0 15px;
 }
 
+.app-modal .sheet {
+  width: 100%;
+  text-align: center;
+  padding: 10px 35px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  background: var(--colour-modal-input-background);
+  color: var(--colour-modal-text);
+  font-size: 26px;
+  line-height: 1.15;
+  box-shadow: 0 8px 12px -6px var(--colour-modal-sheet-drop-shadow);
+}
+
 .app-modal .btn {
   color: var(--colour-modal-text);
   margin-top: 6px;
@@ -37,5 +58,5 @@
   background: var(--colour-modal-input-background);
   color: var(--colour-modal-text);
   font-size: 26px;
-  box-shadow: 0 8px 12px -6px var(--colour-modal-input-drop-shadow);
+  box-shadow: 0 8px 12px -6px var(--colour-modal-sheet-drop-shadow);
 }
