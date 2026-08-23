@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Outlet, useNavigate } from 'react-router';
+
 import PlusIcon from '../assets/plus.svg';
 import DustbinIcon from '../assets/dustbin.svg';
 import BackRightIcon from '../assets/back-right.svg';
@@ -40,7 +41,7 @@ function Homes() {
 				<IconLink to="/homes/new" src={PlusIcon} alt={t('homes.add')} scale='65%' />
 			</div>
 		</h1>
-		<div className="main-buttons home-list d-flex flex-column align-items-center">
+		<div className="main-buttons main-list d-flex flex-column align-items-center">
 			{
 				homes.map(home => (
 					<div className="main-list-item" key={home.id}>
