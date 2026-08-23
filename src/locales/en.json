@@ -30,5 +30,7 @@
       "title": "404 - Not Found",
       "message": "What you are looking for does not exist. :("
     }
-  }
+  },
+  "edit": "Edit",
+  "delete": "Delete"
 }
