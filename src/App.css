@@ -6,6 +6,12 @@
   --colour-drop-shadow: #ffe78740;
   --colour-button: #d5d5d533;
   --colour-button-border: #d5d5d5ed;
+  --colour-modal-background: #cbcbcb;
+  --colour-confirm: #009d349b;
+  --colour-cancel: #a100038c;
+  --colour-modal-text: #000000;
+  --colour-modal-input-background: #f3f3f3;
+  --colour-modal-input-drop-shadow: #ffddad;
 }
 
 body {
@@ -22,12 +28,50 @@ main {
   position: fixed;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .app-modal {
-  /* TODO: styling */
+  border-radius: 19px;
+  margin: 170px auto 0;
+  width: calc(100% - 12px);
+  padding: 18px 9px 9px 9px;
+  color: var(--colour-modal-text);
+  background: var(--colour-modal-background);
+  font-size: 26px;
+}
+
+.app-modal-footer {
+  padding: 0 15px;
+}
+
+.app-modal .btn {
+  color: var(--colour-modal-text);
+  margin-top: 6px;
+  padding: 0;
+}
+
+.btn.confirm {
+  color: var(--colour-confirm);
+}
+
+.btn.cancel {
+  color: var(--colour-cancel);
+}
+
+.app-modal input[type="text"] {
+  width: 100%;
+  text-align: center;
+  padding: 10px 35px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  background: var(--colour-modal-input-background);
+  color: var(--colour-modal-text);
+  font-size: 26px;
+  box-shadow: 0 8px 12px -6px var(--colour-modal-input-drop-shadow);
 }
 
 h1 {
@@ -85,12 +129,17 @@ h1 {
 .btn.bare,
 .btn.bare:hover,
 .btn.bare:focus,
-.btn.bare:active {
+.btn.bare:active,
+.app-modal .btn,
+.app-modal .btn:hover,
+.app-modal .btn:focus,
+.app-modal .btn:active {
   filter: brightness(100%) !important;
   background: none !important;
 }
 
-.btn.bare::before {
+.btn.bare::before,
+.app-modal .btn::before {
   box-shadow: none !important;
 }
 

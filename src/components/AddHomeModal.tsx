@@ -15,7 +15,7 @@ function AddHomeModal() {
 
 	const close = () => navigate('/homes');
 
-	const handleSubmit = async (event: React.FormEvent) => {
+	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		if (!name.trim()) {
 			return;
@@ -27,16 +27,22 @@ function AddHomeModal() {
 
 	return (
 		<Modal onClose={close}>
-			<form onSubmit={handleSubmit}>
+			<form
+				className='d-flex flex-column align-items-center gap-0'
+				onSubmit={handleSubmit}
+			>
 				<h2>{t('homes.add')}</h2>
 				<input
 					type="text"
 					value={name}
 					onChange={(event) => setName(event.target.value)}
-					placeholder={t('homes.namePlaceholder')}
+					placeholder={t('homes.myNewHome')}
 					autoFocus
 				/>
-				<Button>{t('homes.add')}</Button>
+				<div className="app-modal-footer d-flex flex-row justify-content-between w-100">
+					<Button disabled={name === ''} className='confirm'>{t('confirm')}</Button>
+					<Button type='button' className='cancel' onClick={close}>{t('cancel')}</Button>
+				</div>
 			</form>
 		</Modal>
 	);

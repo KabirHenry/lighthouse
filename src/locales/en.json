@@ -17,7 +17,8 @@
   "homes": {
     "add": "Add Home",
     "edit": "Edit Home",
-    "delete": "Delete Home"
+    "delete": "Delete Home",
+    "myNewHome": "My New Home"
   },
   "pages": {
     "about": "About",
@@ -32,5 +33,7 @@
       "title": "404 - Not Found",
       "message": "What you are looking for does not exist. :("
     }
-  }
+  },
+  "confirm": "Confirm",
+  "cancel": "Cancel"
 }
