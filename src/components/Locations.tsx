@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet, Link } from 'react-router';
+import { Link, Outlet, useSearchParams } from 'react-router';
 
 import PlusIcon from '../assets/plus.svg';
 import BackLeftIcon from '../assets/back-left.svg';
@@ -10,16 +11,24 @@ import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
+import type { RoomID } from '../services';
 
 import './Rooms.css';
 
-function Rooms() {
+function Locations() {
 	const { t } = useTranslation();
-	const { home: activeHome, rooms } = useHomesContext();
+	const { home, rooms, locations, loadLocations } = useHomesContext();
+	const [searchParams] = useSearchParams();
+	const roomID = Number(searchParams.get('room')) as RoomID;
+	const room = rooms.find((info) => info.room.id === roomID)?.room;
+
+	useEffect(() => {
+		void loadLocations(roomID);
+	}, [loadLocations, roomID]);
 
 	return <>
 		<div className="align-self-end">
-			<IconLink to="/" src={BackLeftIcon} alt={t('home.back')} className='bare' />
+			<IconLink to="/rooms" src={BackLeftIcon} alt={t('home.back')} className='bare' />
 		</div>
 		<h1 className="main-title">
 			<div className='main-title-actions-before'>
@@ -27,52 +36,48 @@ function Rooms() {
 					<LightHousePixel style={{ top: '2px', left: -3 }} />
 				</span>
 			</div>
-			<span className="main-title-text">{t('pages.rooms')}</span>
+			<span className="main-title-text">{t('pages.locations')}</span>
 			<div className="main-title-actions-after">
-				<IconLink to="/rooms/new" src={PlusIcon} alt={t('rooms.add')} scale='65%' />
+				<IconLink to={`/locations/new?room=${roomID}`} src={PlusIcon} alt={t('locations.add')} scale='65%' />
 			</div>
 			<div className="subheading">
-				{activeHome?.name}
+				{room?.name}, {home?.name}
 			</div>
 		</h1>
 		<div className="main-buttons rooms-items main-list d-flex flex-column align-items-center">
 			{
-				rooms.map(({ room, locationCount, itemCount }) => (
-					<div className="main-list-item" key={room.id}>
+				locations.map(({ location, itemCount }) => (
+					<div className="main-list-item" key={location.id}>
 						<div className="main-list-item-actions-before">
 							<IconLink
-								to={`/rooms/${room.id}/delete`}
+								to={`/locations/${location.id}/delete`}
 								src={DustbinIcon}
 								scale='70%'
 								alt={t('homes.delete')}
 								className='bare d-none d-md-block'
 							/>
 							<IconLink
-								to={`/rooms/${room.id}/upload`}
 								src={RoomIcon}
 								alt={t('homes.delete')}
 								className='bare room-icon'
 							/>
 						</div>
 						<div className='room-data'>
-							<Link to={`/locations?room=${room.id}`}>
-								<Button>{room.name}</Button>
+							<Link to={`/items?location=${location.id}`}>
+								<Button>{location.name}</Button>
 							</Link>
-							<div className='mt-1'>{locationCount} locations</div>
 							<div>{itemCount} items</div>
 						</div>
 						<div className="main-list-item-actions-after">
 							<IconLink
-								to={`/rooms/${room.id}/delete`}
+								to={`/locations/${location.id}/delete`}
 								src={DustbinIcon}
-								// scale='50%'
 								alt={t('homes.delete')}
 								className='bare d-md-none'
 							/>
 							<IconLink
-								to={`/rooms/${room.id}`}
+								to={`/locations/${location.id}`}
 								src={PencilIcon}
-								// scale='60%'
 								alt={t('homes.edit')}
 								className='bare'
 							/>
@@ -85,4 +90,4 @@ function Rooms() {
 	</>;
 }
 
-export default Rooms;
+export default Locations;

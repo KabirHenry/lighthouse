@@ -25,6 +25,7 @@
     "about": "About",
     "items": "Items",
     "rooms": "Rooms",
+    "locations": "Locations",
     "reminders": "Reminders",
     "backup": "Backup",
     "homes": "Homes"
@@ -41,5 +42,8 @@
   "rooms": {
     "add": "Add Room",
     "myNewRoom": "My New Room"
+  },
+  "locations": {
+    "add": "Add Location"
   }
 }

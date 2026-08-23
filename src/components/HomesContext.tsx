@@ -1,14 +1,15 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import HomesStateContext, { type HomesContextValue } from '../context/homesStateContext';
-import { getHomeService, type Home, type HomeID, type HomeService, type RoomInfo } from '../services';
+import { getHomeService, type Home, type HomeID, type HomeService, type LocationInfo, type RoomID, type RoomInfo } from '../services';
 
 function HomesProvider({ children }: { children: React.ReactNode }) {
 	const [homeService, setHomeService] = useState<HomeService | null>(null);
 	const [home, setHome] = useState<Home | null>(null);
 	const [homes, setHomes] = useState<Home[]>([]);
 	const [rooms, setRooms] = useState<RoomInfo[]>([]);
+	const [locations, setLocations] = useState<LocationInfo[]>([]);
 
 	const isLoaded = homeService !== null && home !== null;
 
@@ -77,6 +78,14 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		return id;
 	};
 
+	const loadLocations = useCallback(async (roomID: RoomID) => {
+		if (!homeService) {
+			return;
+		}
+
+		setLocations(await homeService.locations(roomID));
+	}, [homeService]);
+
 	useEffect(() => {
 		let isCancelled = false;
 
@@ -130,11 +139,13 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		home,
 		homes,
 		rooms,
+		locations,
 		addHome,
 		updateHome,
 		deleteHome,
 		setActiveHome,
 		addRoom,
+		loadLocations,
 	};
 
 	return <HomesStateContext.Provider value={homesState}>{children}</HomesStateContext.Provider>;

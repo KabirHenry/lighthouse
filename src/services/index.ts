@@ -59,6 +59,11 @@ export type Location = {
 	pictureID?: PictureID;
 };
 
+export type LocationInfo = {
+	location: Location;
+	itemCount: number;
+};
+
 export type Item = {
 	id: ItemID;
 	locationID: LocationID;
@@ -226,9 +231,17 @@ export class HomeService {
 		await tx.done;
 	}
 
-	async locations(roomID: RoomID): Promise<Location[]> {
-		const locationStore = this.db.transaction(Stores.LOCATIONS, 'readonly').objectStore(Stores.LOCATIONS);
-		return locationStore.index('roomID').getAll(roomID);
+	async locations(roomID: RoomID): Promise<LocationInfo[]> {
+		const tx = this.db.transaction([Stores.LOCATIONS, Stores.ITEMS], 'readonly');
+		const locations = await tx.objectStore(Stores.LOCATIONS).index('roomID').getAll(roomID);
+		const itemIndex = tx.objectStore(Stores.ITEMS).index('locationID');
+
+		return Promise.all(
+			locations.map(async (location) => ({
+				location,
+				itemCount: await itemIndex.count(location.id),
+			})),
+		);
 	}
 
 	async addLocation(
