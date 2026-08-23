@@ -7,6 +7,7 @@ export type HomesContextValue = {
 	home: Home | null;
 	homes: Home[];
 	addHome: (name: string, description?: string) => Promise<HomeID | undefined>;
+	updateHome: (id: HomeID, name: string, description?: string) => Promise<void>;
 	deleteHome: (id: HomeID) => Promise<void>;
 };
 

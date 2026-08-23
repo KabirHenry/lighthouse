@@ -31,6 +31,15 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		return id;
 	};
 
+	const updateHome = async (id: HomeID, name: string, description?: string) => {
+		if (!homeService) {
+			return;
+		}
+
+		await homeService.updateHome(id, { name, description });
+		await reloadHomes();
+	};
+
 	const deleteHome = async (id: HomeID) => {
 		if (!homeService) {
 			return;
@@ -72,6 +81,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		home,
 		homes,
 		addHome,
+		updateHome,
 		deleteHome,
 	};
 

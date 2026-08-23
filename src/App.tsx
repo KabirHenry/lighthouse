@@ -6,6 +6,7 @@ import './App.css';
 import HomesProvider from './components/HomesContext';
 import Homes from './components/Homes';
 import AddHome from './components/modals/AddHome';
+import EditHome from './components/modals/EditHome';
 import DeleteHome from './components/modals/DeleteHome';
 import HomePage from './components/HomePage';
 import NotFound from './components/NotFound';
@@ -28,6 +29,7 @@ function App() {
 					<Route path="/about" element={<About/>} />
 					<Route path="/homes" element={<Homes/>}>
 						<Route path="new" element={<AddHome/>} />
+						<Route path=":id" element={<EditHome/>} />
 						<Route path=":id/delete" element={<DeleteHome/>} />
 					</Route>
 					<Route path="*" element={<NotFound />} />

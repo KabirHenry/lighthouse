@@ -1,29 +1,31 @@
 import { useState } from 'react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import useHomesContext from '../../hooks/useHomesContext';
 import Button from '../Button';
 import Modal from './Modal';
 
-function AddHome() {
+function EditHome() {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
-	const { addHome } = useHomesContext();
-	const [name, setName] = useState('');
+	const { homes, updateHome } = useHomesContext();
+	const { id } = useParams<{ id: string }>();
+	const home = homes.find((home) => home.id === Number(id));
+	const [name, setName] = useState(home?.name ?? '');
 
-	const canSubmit = name.trim() !== '';
+	const shouldUpdate = name.trim() !== '' && name.trim() !== home?.name;
 
 	const close = () => navigate('/homes');
 
 	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		if (!name.trim()) {
+		if (!home || !name.trim()) {
 			return;
 		}
 
-		await addHome(name.trim());
+		await updateHome(home.id, name.trim());
 		close();
 	};
 
@@ -33,7 +35,7 @@ function AddHome() {
 				className='d-flex flex-column align-items-center gap-0'
 				onSubmit={handleSubmit}
 			>
-				<h2>{t('homes.add')}</h2>
+				<h2>{t('homes.edit')}</h2>
 				<input
 					type="text"
 					value={name}
@@ -42,7 +44,7 @@ function AddHome() {
 					autoFocus
 				/>
 				<div className="app-modal-footer d-flex flex-row justify-content-between w-100">
-					<Button disabled={!canSubmit} className='confirm'>{t('confirm')}</Button>
+					<Button disabled={!shouldUpdate} className='confirm'>{t('confirm')}</Button>
 					<Button type='button' className='cancel' onClick={close}>{t('cancel')}</Button>
 				</div>
 			</form>
@@ -50,4 +52,4 @@ function AddHome() {
 	);
 }
 
-export default AddHome;
+export default EditHome;

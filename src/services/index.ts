@@ -117,6 +117,16 @@ export class HomeService {
 		return homeStore.add({ name, description } as Home);
 	}
 
+	async updateHome(id: HomeID, updates: Partial<Omit<Home, 'id'>>): Promise<void> {
+		const homeStore = this.db.transaction(Stores.HOMES, 'readwrite').objectStore(Stores.HOMES);
+		const home = await homeStore.get(id);
+		if (!home) {
+			return;
+		}
+
+		await homeStore.put({ ...home, ...updates });
+	}
+
 	async deleteHome(id: HomeID): Promise<void> {
 		const tx = this.db.transaction([Stores.HOMES, Stores.LOCAL], 'readwrite');
 		const homeStore = tx.objectStore(Stores.HOMES);
