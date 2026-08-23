@@ -1,7 +1,7 @@
 import { type DBSchema, type IDBPDatabase, openDB } from 'idb';
 
 const DB_NAME = 'LightHouseDB';
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 enum Stores {
 	HOMES = 'homes',
@@ -12,7 +12,7 @@ enum Stores {
 	LOCAL = 'local',
 }
 
-const LAST_HOME_ID_KEY = 'lastHomeID' as const;
+const ACTIVE_HOME_ID_KEY = 'activeHomeID' as const;
 
 export async function getHomeService() {
 	const db = await initDB();
@@ -61,7 +61,7 @@ export type Item = {
 	pictureID?: PictureID;
 };
 
-type LastHomeIDEntry = { key: typeof LAST_HOME_ID_KEY; value: HomeID | undefined };
+type LastHomeIDEntry = { key: typeof ACTIVE_HOME_ID_KEY; value: HomeID | undefined };
 type UnknownLocalEntry = { key: string; value: unknown };
 type LocalEntry = LastHomeIDEntry | UnknownLocalEntry;
 
@@ -105,7 +105,7 @@ export class HomeService {
 	async homes(): Promise<{ homes: Home[]; currentHome: Home }> {
 		const tx = this.db.transaction([Stores.HOMES, Stores.LOCAL], 'readonly');
 		const homes = await tx.objectStore(Stores.HOMES).getAll();
-		const lastHomeIDResult = await tx.objectStore(Stores.LOCAL).get(LAST_HOME_ID_KEY);
+		const lastHomeIDResult = await tx.objectStore(Stores.LOCAL).get(ACTIVE_HOME_ID_KEY);
 		const lastHomeID = lastHomeIDResult?.value;
 
 		const currentHome = homes.find((home) => home.id === lastHomeID) || homes[0];
@@ -140,11 +140,11 @@ export class HomeService {
 		await homeStore.delete(id);
 
 		const localStore = tx.objectStore(Stores.LOCAL);
-		const lastHomeIDResult = await localStore.get(LAST_HOME_ID_KEY);
+		const lastHomeIDResult = await localStore.get(ACTIVE_HOME_ID_KEY);
 		const lastHomeID = lastHomeIDResult?.value;
 
 		if (lastHomeID === id) {
-			await localStore.put({ key: LAST_HOME_ID_KEY, value: undefined });
+			await localStore.put({ key: ACTIVE_HOME_ID_KEY, value: undefined });
 		}
 
 		await tx.done;
@@ -335,9 +335,9 @@ async function initDB() {
 			});
 
 			const localStore = transaction.objectStore(Stores.LOCAL);
-			localStore.get(LAST_HOME_ID_KEY).then((result) => {
+			localStore.get(ACTIVE_HOME_ID_KEY).then((result) => {
 				if (result === undefined) {
-					localStore.add({ key: LAST_HOME_ID_KEY, value: 1 as HomeID });
+					localStore.add({ key: ACTIVE_HOME_ID_KEY, value: 1 as HomeID });
 				}
 			});
 		},
