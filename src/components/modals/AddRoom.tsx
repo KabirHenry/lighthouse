@@ -3,14 +3,14 @@ import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
-import useRoomsContext from '../../hooks/useRoomsContext';
+import useHomesContext from '../../hooks/useHomesContext';
 import Button from '../Button';
 import Modal from './Modal';
 
 function AddRoom() {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
-	const { addRoom } = useRoomsContext();
+	const { addRoom } = useHomesContext();
 	const [name, setName] = useState('');
 
 	const canSubmit = name.trim() !== '';

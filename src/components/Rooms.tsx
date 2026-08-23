@@ -10,14 +10,12 @@ import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
-import useRoomsContext from '../hooks/useRoomsContext';
 
 import './Rooms.css';
 
 function Rooms() {
 	const { t } = useTranslation();
-	const { home: activeHome } = useHomesContext();
-	const { rooms } = useRoomsContext();
+	const { home: activeHome, rooms } = useHomesContext();
 
 	return <>
 		<div className="align-self-end">

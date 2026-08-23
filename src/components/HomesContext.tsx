@@ -2,12 +2,13 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 
 import HomesStateContext, { type HomesContextValue } from '../context/homesStateContext';
-import { getHomeService, type Home, type HomeID, type HomeService } from '../services';
+import { getHomeService, type Home, type HomeID, type HomeService, type RoomInfo } from '../services';
 
 function HomesProvider({ children }: { children: React.ReactNode }) {
 	const [homeService, setHomeService] = useState<HomeService | null>(null);
 	const [home, setHome] = useState<Home | null>(null);
 	const [homes, setHomes] = useState<Home[]>([]);
+	const [rooms, setRooms] = useState<RoomInfo[]>([]);
 
 	const isLoaded = homeService !== null && home !== null;
 
@@ -58,6 +59,24 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		await reloadHomes();
 	};
 
+	const reloadRooms = async (service: HomeService | null = homeService) => {
+		if (!service || !home) {
+			return;
+		}
+
+		setRooms(await service.rooms(home.id));
+	};
+
+	const addRoom = async (name: string, description?: string) => {
+		if (!homeService || !home) {
+			return undefined;
+		}
+
+		const id = await homeService.addRoom(home.id, name, description);
+		await reloadRooms();
+		return id;
+	};
+
 	useEffect(() => {
 		let isCancelled = false;
 
@@ -85,14 +104,37 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		};
 	}, []);
 
+	useEffect(() => {
+		let isCancelled = false;
+
+		const loadRooms = async () => {
+			if (!homeService || !home) {
+				return;
+			}
+
+			const allRooms = await homeService.rooms(home.id);
+			if (!isCancelled) {
+				setRooms(allRooms);
+			}
+		};
+
+		void loadRooms();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, [homeService, home]);
+
 	const homesState: HomesContextValue = {
 		isLoaded,
 		home,
 		homes,
+		rooms,
 		addHome,
 		updateHome,
 		deleteHome,
 		setActiveHome,
+		addRoom,
 	};
 
 	return <HomesStateContext.Provider value={homesState}>{children}</HomesStateContext.Provider>;
