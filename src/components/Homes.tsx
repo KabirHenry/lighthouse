@@ -56,10 +56,11 @@ function Homes() {
 							/>
 						</div>
 						<Button
+							style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}
 							onClick={() => selectHome(home.id)}
 						>
-							{home.id === activeHome?.id && '🏠 '}
-							{home.name}
+							{home.id === activeHome?.id && <div>🏠</div>}
+							<div>{home.name}</div>
 						</Button>
 						<div className="main-list-item-actions-after">
 							<IconLink
