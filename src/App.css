@@ -154,9 +154,9 @@ h1 {
 
 .main-list-item-actions-before,
 .main-list-item-actions-after {
+  margin: 0 10px;
   display: flex;
   align-items: center;
-  margin-right: 10px;
   gap: 8px;
 }
 
