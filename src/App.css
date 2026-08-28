@@ -19,7 +19,11 @@ body {
 }
 
 main {
-  padding: 20px 24px !important;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    calc(24px + env(safe-area-inset-right))
+    calc(20px + env(safe-area-inset-bottom))
+    calc(24px + env(safe-area-inset-left)) !important;
 }
 
 h1 {
