@@ -12,6 +12,8 @@ import {
 	type LocationID,
 	type LocationInfo,
 	type LocationRoomInfo,
+	type PictureID,
+	type PictureOwnerType,
 	type RoomID,
 	type RoomInfo,
 } from '../services';
@@ -225,6 +227,27 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		await refreshAfterItemChange();
 	};
 
+	const getPicture = useCallback(async (id: PictureID) => {
+		if (!homeService) {
+			return undefined;
+		}
+
+		return homeService.getPicture(id);
+	}, [homeService]);
+
+	const updatePicture = async (
+		type: PictureOwnerType,
+		id: number,
+		picture: { mimeType: string; data: Blob } | null,
+	) => {
+		if (!homeService) {
+			return;
+		}
+
+		await homeService.setPicture(type, id, picture);
+		await refreshAfterItemChange();
+	};
+
 	useEffect(() => {
 		let isCancelled = false;
 
@@ -298,6 +321,8 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		addItem,
 		updateItem,
 		deleteItem,
+		getPicture,
+		updatePicture,
 	};
 
 	return <HomesStateContext.Provider value={homesState}>{children}</HomesStateContext.Provider>;

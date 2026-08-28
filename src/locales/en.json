@@ -77,5 +77,10 @@
     "selectRooms": "Filter by room",
     "selectLocations": "Filter by location",
     "picture": "Item picture"
+  },
+  "picture": {
+    "prompt": "Tap below to update the {{name}}'s picture:",
+    "update": "Update",
+    "download": "Download"
   }
 }

@@ -14,6 +14,14 @@ enum Stores {
 
 const ACTIVE_HOME_ID_KEY = 'activeHomeID' as const;
 
+export type PictureOwnerType = 'room' | 'location' | 'item';
+
+const PICTURE_OWNER_STORES: Record<PictureOwnerType, Stores> = {
+	room: Stores.ROOMS,
+	location: Stores.LOCATIONS,
+	item: Stores.ITEMS,
+};
+
 export async function getHomeService() {
 	const db = await initDB();
 	return new HomeService(db);
@@ -349,6 +357,35 @@ export class HomeService {
 	async deletePicture(id: PictureID): Promise<void> {
 		const pictureStore = this.db.transaction(Stores.PICTURES, 'readwrite').objectStore(Stores.PICTURES);
 		await pictureStore.delete(id);
+	}
+
+	async setPicture(
+		type: PictureOwnerType,
+		id: number,
+		picture: { mimeType: string; data: Blob } | null,
+	): Promise<void> {
+		const ownerStore = PICTURE_OWNER_STORES[type];
+		const tx = this.db.transaction([ownerStore, Stores.PICTURES], 'readwrite');
+		const store = tx.objectStore(ownerStore);
+
+		const entity = await store.get(id as never) as Room | Location | Item | undefined;
+		if (!entity) {
+			await tx.done;
+			return;
+		}
+
+		const previousPictureID = entity.pictureID;
+		const pictureID = picture
+			? await tx.objectStore(Stores.PICTURES).add({ mimeType: picture.mimeType, data: picture.data } as Picture)
+			: undefined;
+
+		await store.put({ ...entity, pictureID } as never);
+
+		if (previousPictureID !== undefined) {
+			await tx.objectStore(Stores.PICTURES).delete(previousPictureID);
+		}
+
+		await tx.done;
 	}
 }
 

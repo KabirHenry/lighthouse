@@ -23,6 +23,7 @@ import Locations from './components/Locations';
 import AddLocation from './components/modals/AddLocation';
 import EditLocation from './components/modals/EditLocation';
 import DeleteLocation from './components/modals/DeleteLocation';
+import PictureModal from './components/modals/PictureModal';
 import Reminders from './components/Reminders';
 import Backup from './components/Backup';
 import About from './components/About';
@@ -38,16 +39,19 @@ function App() {
 						<Route path="new" element={<AddItem/>} />
 						<Route path=":id" element={<EditItem/>} />
 						<Route path=":id/delete" element={<DeleteItem/>} />
+						<Route path=":id/upload" element={<PictureModal type="item"/>} />
 					</Route>
 					<Route path="/rooms" element={<Rooms/>}>
 						<Route path="new" element={<AddRoom/>} />
 						<Route path=":id" element={<EditRoom/>} />
 						<Route path=":id/delete" element={<DeleteRoom/>} />
+						<Route path=":id/upload" element={<PictureModal type="room"/>} />
 					</Route>
 					<Route path="/locations" element={<Locations/>}>
 						<Route path="new" element={<AddLocation/>} />
 						<Route path=":id" element={<EditLocation/>} />
 						<Route path=":id/delete" element={<DeleteLocation/>} />
+						<Route path=":id/upload" element={<PictureModal type="location"/>} />
 					</Route>
 					<Route path="/reminders" element={<Reminders/>} />
 					<Route path="/backup" element={<Backup/>} />

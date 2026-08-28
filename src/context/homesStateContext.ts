@@ -8,6 +8,9 @@ import type {
 	LocationID,
 	LocationInfo,
 	LocationRoomInfo,
+	Picture,
+	PictureID,
+	PictureOwnerType,
 	RoomID,
 	RoomInfo,
 } from '../services';
@@ -37,6 +40,12 @@ export type HomesContextValue = {
 	addItem: (locationID: LocationID, name: string, description?: string) => Promise<ItemID | undefined>;
 	updateItem: (id: ItemID, name: string, locationID: LocationID, description?: string) => Promise<void>;
 	deleteItem: (id: ItemID) => Promise<void>;
+	getPicture: (id: PictureID) => Promise<Picture | undefined>;
+	updatePicture: (
+		type: PictureOwnerType,
+		id: number,
+		picture: { mimeType: string; data: Blob } | null,
+	) => Promise<void>;
 };
 
 const HomesStateContext = createContext<HomesContextValue | null>(null);
