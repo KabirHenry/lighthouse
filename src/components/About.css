@@ -19,3 +19,13 @@
   font-size: 16px;
   opacity: 0.45;
 }
+
+.about-update {
+  gap: 10px;
+}
+
+.about-update-status {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.6;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { isStandalone } from '../../utils/pwa';
 import Button from '../Button';
 import Modal from './Modal';
 
@@ -16,13 +17,6 @@ const DISMISS_COOLDOWN = 14 * 24 * 60 * 60 * 1000;
 // iOS never fires `beforeinstallprompt`; wait a beat before showing the manual
 // instructions so it doesn't slam the user the instant the page loads.
 const IOS_HINT_DELAY = 3000;
-
-function isStandalone() {
-	return (
-		window.matchMedia('(display-mode: standalone)').matches ||
-		(window.navigator as Navigator & { standalone?: boolean }).standalone === true
-	);
-}
 
 function isIos() {
 	return /iphone|ipad|ipod/i.test(navigator.userAgent);
