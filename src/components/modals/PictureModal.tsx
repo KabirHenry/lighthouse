@@ -12,6 +12,14 @@ import Modal from './Modal';
 
 import './PictureModal.css';
 
+// Whether to surface a dedicated "Take photo" action. On desktop the `capture`
+// attribute is ignored (it just opens the file dialog), so only bother when the
+// device actually looks like it has a camera we can point at.
+const canCapture =
+	typeof navigator !== 'undefined' &&
+	(!!navigator.mediaDevices?.getUserMedia ||
+		window.matchMedia?.('(pointer: coarse)').matches);
+
 function extFromMime(mime: string | null): string {
 	if (mime === 'image/jpeg') {
 		return 'jpg';
@@ -63,6 +71,7 @@ function PictureModal({ type }: { type: PictureOwnerType }) {
 	const [cleared, setCleared] = useState(false);
 	const [dragging, setDragging] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const cameraInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
 		if (pictureID === undefined) {
@@ -188,6 +197,27 @@ function PictureModal({ type }: { type: PictureOwnerType }) {
 						event.target.value = '';
 					}}
 				/>
+				<input
+					ref={cameraInputRef}
+					className='picture-input'
+					type='file'
+					accept='image/*'
+					capture='environment'
+					onChange={(event) => {
+						acceptFile(event.target.files?.[0]);
+						event.target.value = '';
+					}}
+				/>
+				{canCapture && (
+					<div className='picture-sources d-flex flex-row justify-content-between w-100'>
+						<Button type='button' className='muted' onClick={() => cameraInputRef.current?.click()}>
+							{t('picture.takePhoto')}
+						</Button>
+						<Button type='button' className='muted' onClick={() => inputRef.current?.click()}>
+							{t('picture.upload')}
+						</Button>
+					</div>
+				)}
 				<div className='app-modal-footer d-flex flex-column w-100'>
 					<div className='d-flex flex-row justify-content-between w-100'>
 						<Button type='button' className='muted' disabled={!canClear} onClick={handleClear}>

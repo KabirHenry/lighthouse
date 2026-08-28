@@ -96,6 +96,8 @@
     "prompt": "Tap below to update {{name}}'s picture:",
     "editHint": "To update {{name}}'s picture, tap its icon in the list.",
     "update": "Update",
-    "download": "Download"
+    "download": "Download",
+    "takePhoto": "Take Photo",
+    "upload": "Upload Photo"
   }
 }
