@@ -52,7 +52,7 @@ function Rooms() {
 							<IconLink
 								to={`/rooms/${room.id}/upload`}
 								src={RoomIcon}
-								alt={t('homes.delete')}
+								alt={t('rooms.picture')}
 								className='bare secondary-list-icon'
 							/>
 						</div>

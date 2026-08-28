@@ -51,14 +51,16 @@
     "edit": "Edit Room",
     "delete": "Delete Room",
     "myNewRoom": "My New Room",
-    "deleteConfirm": "This will delete \"{{name}}\" and all its locations and items."
+    "deleteConfirm": "This will delete \"{{name}}\" and all its locations and items.",
+    "picture": "Room picture"
   },
   "locations": {
     "add": "Add Location",
     "edit": "Edit Location",
     "delete": "Delete Location",
     "myNewLocation": "My New Location",
-    "deleteConfirm": "This will delete \"{{name}}\" and all its items."
+    "deleteConfirm": "This will delete \"{{name}}\" and all its items.",
+    "picture": "Location picture"
   },
   "items": {
     "add": "Add Item",
@@ -73,6 +75,7 @@
     "sortFilter": "Sort/Filter",
     "searchPlaceholder": "Search by name",
     "selectRooms": "Filter by room",
-    "selectLocations": "Filter by location"
+    "selectLocations": "Filter by location",
+    "picture": "Item picture"
   }
 }

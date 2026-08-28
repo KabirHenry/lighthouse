@@ -60,8 +60,9 @@ function Locations() {
 								className='bare d-none d-md-block'
 							/>
 							<IconLink
+								to={`/locations/${location.id}/upload?room=${roomID}`}
 								src={DrawerIcon}
-								alt={t('homes.delete')}
+								alt={t('locations.picture')}
 								className='bare secondary-list-icon'
 							/>
 						</div>

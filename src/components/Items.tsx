@@ -118,8 +118,9 @@ function Items() {
 								className='bare d-none d-md-block'
 							/>
 							<IconLink
+								to={`/items/${item.id}/upload${query}`}
 								src={ItemIcon}
-								alt={t('items.delete')}
+								alt={t('items.picture')}
 								className='bare secondary-list-icon'
 							/>
 						</div>
