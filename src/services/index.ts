@@ -417,45 +417,81 @@ export class HomeService {
 	}
 }
 
+type UpgradeTx = IDBPTransaction<
+	LighthouseDBSchema,
+	StoreNames<LighthouseDBSchema>[],
+	'versionchange'
+>;
+
+/**
+ * Creates the baseline schema. Database versions 1–5 were all pre-release and
+ * held no data worth keeping, so they collapse into this single step; version 5
+ * is the first public schema.
+ *
+ * Every step is guarded, so running it against a database that already has part
+ * of the schema (an old dev build) is harmless.
+ */
+function createInitialSchema(db: IDBPDatabase<LighthouseDBSchema>, tx: UpgradeTx) {
+	const ensureStore = (name: Stores, options: IDBObjectStoreParameters): IDBObjectStore =>
+		(db.objectStoreNames.contains(name)
+			? tx.objectStore(name as never)
+			: db.createObjectStore(name, options)) as unknown as IDBObjectStore;
+
+	const ensureIndex = (store: IDBObjectStore, keyPath: string) => {
+		if (!store.indexNames.contains(keyPath)) {
+			store.createIndex(keyPath, keyPath, { unique: false });
+		}
+	};
+
+	ensureStore(Stores.HOMES, { keyPath: 'id', autoIncrement: true });
+
+	const roomStore = ensureStore(Stores.ROOMS, { keyPath: 'id', autoIncrement: true });
+	ensureIndex(roomStore, 'homeID');
+	ensureIndex(roomStore, 'pictureID');
+
+	const locationStore = ensureStore(Stores.LOCATIONS, { keyPath: 'id', autoIncrement: true });
+	ensureIndex(locationStore, 'roomID');
+	ensureIndex(locationStore, 'pictureID');
+
+	const itemStore = ensureStore(Stores.ITEMS, { keyPath: 'id', autoIncrement: true });
+	ensureIndex(itemStore, 'locationID');
+	ensureIndex(itemStore, 'pictureID');
+
+	ensureStore(Stores.PICTURES, { keyPath: 'id', autoIncrement: true });
+	ensureStore(Stores.LOCAL, { keyPath: 'key' });
+}
+
+/** Guarantees the invariants the app relies on: at least one home, exists as id 1. */
+function seedFirstHome(tx: UpgradeTx) {
+	const homeStore = tx.objectStore(Stores.HOMES);
+	homeStore.getAll().then((homes) => {
+		if (homes.length === 0) {
+			homeStore.add({ name: 'My Home' } as Home);
+		}
+	});
+
+	const localStore = tx.objectStore(Stores.LOCAL);
+	localStore.get(ACTIVE_HOME_ID_KEY).then((result) => {
+		if (result === undefined) {
+			localStore.add({ key: ACTIVE_HOME_ID_KEY, value: 1 as HomeID });
+		}
+	});
+}
+
 async function initDB() {
 	return openDB<LighthouseDBSchema>(DB_NAME, DB_VERSION, {
-		upgrade(db, _oldVersion, _newVersion, transaction) {
-			// TODO: Add migration logic here if needed in the future.
-			// Right now we're still building the app.
-			for (const storeName of Array.from(db.objectStoreNames)) {
-				db.deleteObjectStore(storeName);
+		upgrade(db, oldVersion, _newVersion, transaction) {
+			// Migration ladder: each block brings a database up from the version
+			// before it. Only run steps the database hasn't seen yet, and never
+			// drop a store that could hold user data — transform it in place.
+			if (oldVersion < 5) {
+				createInitialSchema(db, transaction);
 			}
 
-			const homeStore = db.createObjectStore(Stores.HOMES, { keyPath: 'id', autoIncrement: true });
+			// Future schema changes go here, e.g.:
+			//   if (oldVersion < 6) { /* add store / index / backfill field */ }
 
-			const roomStore = db.createObjectStore(Stores.ROOMS, { keyPath: 'id', autoIncrement: true });
-			roomStore.createIndex('homeID', 'homeID', { unique: false });
-			roomStore.createIndex('pictureID', 'pictureID', { unique: false });
-
-			const locationStore = db.createObjectStore(Stores.LOCATIONS, { keyPath: 'id', autoIncrement: true });
-			locationStore.createIndex('roomID', 'roomID', { unique: false });
-			locationStore.createIndex('pictureID', 'pictureID', { unique: false });
-
-			const itemStore = db.createObjectStore(Stores.ITEMS, { keyPath: 'id', autoIncrement: true });
-			itemStore.createIndex('locationID', 'locationID', { unique: false });
-			itemStore.createIndex('pictureID', 'pictureID', { unique: false });
-
-			db.createObjectStore(Stores.PICTURES, { keyPath: 'id', autoIncrement: true });
-
-			db.createObjectStore(Stores.LOCAL, { keyPath: 'key' });
-
-			homeStore.getAll().then((homes) => {
-				if (homes.length === 0) {
-					homeStore.add({ name: 'My Home' } as Home);
-				}
-			});
-
-			const localStore = transaction.objectStore(Stores.LOCAL);
-			localStore.get(ACTIVE_HOME_ID_KEY).then((result) => {
-				if (result === undefined) {
-					localStore.add({ key: ACTIVE_HOME_ID_KEY, value: 1 as HomeID });
-				}
-			});
+			seedFirstHome(transaction);
 		},
 	});
 }
