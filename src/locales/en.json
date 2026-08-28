@@ -12,7 +12,8 @@
     "title": "Lighthouse",
     "welcome": "Welcome to Lighthouse!",
     "home": "Home",
-    "back": "Back"
+    "back": "Back",
+    "comingSoon": "Coming soon"
   },
   "about": {
     "description": "An inventory management system.",

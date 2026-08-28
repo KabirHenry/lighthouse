@@ -8,6 +8,8 @@
   --colour-button-border: #d5d5d5ed;
   --colour-confirm: #009d349b;
   --colour-cancel: #a100038c;
+  --colour-snippet-bg: #f4d777;
+  --colour-snippet-text: #1a1a1a;
 }
 
 body {
@@ -105,6 +107,31 @@ h1 {
   padding: 6px;
   height: 70px;
   width: 70px;
+}
+
+.btn-snippet-host {
+  overflow: visible;
+}
+
+.btn-snippet {
+  position: absolute;
+  top: -12px;
+  right: -14px;
+  z-index: 1;
+  padding: 2px 7px;
+  background: var(--colour-snippet-bg);
+  color: var(--colour-snippet-text);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-transform: uppercase;
+  pointer-events: none;
+  transform: rotate(4deg);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+.btn:disabled .btn-snippet {
+  filter: brightness(133%);
 }
 
 .btn::before {
