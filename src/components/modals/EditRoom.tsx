@@ -5,8 +5,8 @@ import { useParams } from 'react-router';
 
 import useHomesContext from '../../hooks/useHomesContext';
 import useSmartBack from '../../hooks/useSmartBack';
-import type { HomeID } from '../../services';
 import Button from '../Button';
+import Dropdown from './Dropdown';
 import Modal from './Modal';
 
 function EditRoom() {
@@ -46,16 +46,36 @@ function EditRoom() {
 					placeholder={t('rooms.myNewRoom')}
 					autoFocus
 				/>
-				<select
-					value={homeID ?? ''}
-					onChange={(event) => setHomeID(Number(event.target.value) as HomeID)}
-				>
-					{
-						homes.map((home) => (
-							<option key={home.id} value={home.id}>{home.name}</option>
-						))
-					}
-				</select>
+				<div className='w-100 mt-2'>
+					<Dropdown
+						options={[
+							...homes,
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+							// { id: -1, name: t('homes.unknown') },
+						].map((home) => ({ value: home.id, label: home.name }))}
+						value={homeID}
+						onChange={setHomeID}
+					/>
+				</div>
 				<div className="app-modal-footer d-flex flex-row justify-content-between w-100">
 					<Button disabled={!shouldUpdate} className='confirm'>{t('confirm')}</Button>
 					<Button type='button' className='cancel' onClick={close}>{t('cancel')}</Button>

@@ -3,6 +3,7 @@
   --colour-modal-text: #000000;
   --colour-modal-input-background: #f3f3f3;
   --colour-modal-sheet-drop-shadow: #ffddad;
+  --colour-modal-dropdown-divider: #e8def8;
 }
 
 .app-modal-backdrop {
