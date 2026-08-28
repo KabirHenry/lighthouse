@@ -7,6 +7,8 @@ import {
 	type Home,
 	type HomeID,
 	type HomeService,
+	type Item,
+	type ItemID,
 	type LocationID,
 	type LocationInfo,
 	type RoomID,
@@ -20,6 +22,8 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 	const [rooms, setRooms] = useState<RoomInfo[]>([]);
 	const [locations, setLocations] = useState<LocationInfo[]>([]);
 	const [locationsRoomID, setLocationsRoomID] = useState<RoomID | null>(null);
+	const [items, setItems] = useState<Item[]>([]);
+	const [itemsLocationID, setItemsLocationID] = useState<LocationID | null>(null);
 
 	const isLoaded = homeService !== null && home !== null;
 
@@ -146,6 +150,51 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		await Promise.all([loadLocations(locationsRoomID), reloadRooms()]);
 	};
 
+	const loadItems = useCallback(async (locationID: LocationID) => {
+		setItemsLocationID(locationID);
+		if (!homeService) {
+			return;
+		}
+
+		setItems(await homeService.items(locationID));
+	}, [homeService]);
+
+	const refreshAfterItemChange = async () => {
+		await Promise.all([
+			itemsLocationID === null ? Promise.resolve() : loadItems(itemsLocationID),
+			locationsRoomID === null ? Promise.resolve() : loadLocations(locationsRoomID),
+			reloadRooms(),
+		]);
+	};
+
+	const addItem = async (name: string, description?: string) => {
+		if (!homeService || itemsLocationID === null) {
+			return undefined;
+		}
+
+		const id = await homeService.addItem(itemsLocationID, name, description);
+		await refreshAfterItemChange();
+		return id;
+	};
+
+	const updateItem = async (id: ItemID, name: string, locationID: LocationID, description?: string) => {
+		if (!homeService) {
+			return;
+		}
+
+		await homeService.updateItem(id, { name, locationID, description });
+		await refreshAfterItemChange();
+	};
+
+	const deleteItem = async (id: ItemID) => {
+		if (!homeService) {
+			return;
+		}
+
+		await homeService.deleteItem(id);
+		await refreshAfterItemChange();
+	};
+
 	useEffect(() => {
 		let isCancelled = false;
 
@@ -200,6 +249,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		homes,
 		rooms,
 		locations,
+		items,
 		addHome,
 		updateHome,
 		deleteHome,
@@ -211,6 +261,10 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		addLocation,
 		updateLocation,
 		deleteLocation,
+		loadItems,
+		addItem,
+		updateItem,
+		deleteItem,
 	};
 
 	return <HomesStateContext.Provider value={homesState}>{children}</HomesStateContext.Provider>;

@@ -52,5 +52,12 @@
     "delete": "Delete Location",
     "myNewLocation": "My New Location",
     "deleteConfirm": "This will delete \"{{name}}\" and all its items."
+  },
+  "items": {
+    "add": "Add Item",
+    "edit": "Edit Item",
+    "delete": "Delete Item",
+    "myNewItem": "My New Item",
+    "deleteConfirm": "This will delete \"{{name}}\"."
   }
 }

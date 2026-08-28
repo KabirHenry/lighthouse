@@ -11,6 +11,9 @@ import DeleteHome from './components/modals/DeleteHome';
 import HomePage from './components/HomePage';
 import NotFound from './components/NotFound';
 import Items from './components/Items';
+import AddItem from './components/modals/AddItem';
+import EditItem from './components/modals/EditItem';
+import DeleteItem from './components/modals/DeleteItem';
 import Rooms from './components/Rooms';
 import AddRoom from './components/modals/AddRoom';
 import EditRoom from './components/modals/EditRoom';
@@ -29,7 +32,11 @@ function App() {
 			<Container as={'main'} className="d-flex flex-column align-items-center">
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route path="/items" element={<Items/>} />
+					<Route path="/items" element={<Items/>}>
+						<Route path="new" element={<AddItem/>} />
+						<Route path=":id" element={<EditItem/>} />
+						<Route path=":id/delete" element={<DeleteItem/>} />
+					</Route>
 					<Route path="/rooms" element={<Rooms/>}>
 						<Route path="new" element={<AddRoom/>} />
 						<Route path=":id" element={<EditRoom/>} />
