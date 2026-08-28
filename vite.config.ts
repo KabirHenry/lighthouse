@@ -1,6 +1,10 @@
+import { createRequire } from 'node:module';
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+
+const { version } = createRequire(import.meta.url)('./package.json') as { version: string };
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -37,6 +41,10 @@ export default defineConfig({
 				globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
 				navigateFallback: '/index.html',
 				cleanupOutdatedCaches: true,
+				// Ties the generated service worker to the app version so a bare
+				// `npm version patch` + deploy is enough to trigger the update prompt,
+				// even when no bundled asset hash changed.
+				additionalManifestEntries: [{ url: '/', revision: version }],
 			},
 			devOptions: {
 				enabled: false,
