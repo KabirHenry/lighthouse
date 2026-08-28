@@ -14,6 +14,10 @@
     "home": "Home",
     "back": "Back"
   },
+  "about": {
+    "description": "An inventory management system.",
+    "copyright": "© Param Siddharth & Krishna Kabir Siddharth 2026"
+  },
   "homes": {
     "add": "Add Home",
     "edit": "Edit Home",

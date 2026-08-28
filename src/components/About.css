@@ -1,0 +1,21 @@
+.about {
+  gap: 28px;
+  text-align: center;
+}
+
+.about-description {
+  margin: 0;
+  font-size: 24px;
+}
+
+.about-logo {
+  width: 200px;
+  height: 200px;
+  max-width: 60vw;
+}
+
+.about-copyright {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.45;
+}
