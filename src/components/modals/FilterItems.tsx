@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router';
 
+import { SEPARATOR } from '../../constants';
 import useHomesContext from '../../hooks/useHomesContext';
 import useSmartBack from '../../hooks/useSmartBack';
 import { parseIDList } from '../../utils/params';
@@ -50,7 +51,7 @@ function FilterItems() {
 
 	const locationOptions = useMemo(() => sortOptions(
 		allLocations.map(({ location, room, itemCount }) => {
-			const label = `${location.name} · ${room.name}`;
+			const label = `${location.name}${SEPARATOR}${room.name}`;
 			return {
 				value: location.id,
 				label: itemCount === 0 ? t('items.nameNoItems', { name: label }) : label,

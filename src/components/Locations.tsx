@@ -10,6 +10,7 @@ import DrawerIcon from '../assets/drawer.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
+import { SEPARATOR } from '../constants';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 import type { RoomID } from '../services';
@@ -43,7 +44,7 @@ function Locations() {
 				<IconLink to={`/locations/new?room=${roomID}`} src={PlusIcon} alt={t('locations.add')} scale='65%' />
 			</div>
 			<div className="subheading">
-				{room?.name}, {home?.name}
+				{room?.name}{SEPARATOR}{home?.name}
 			</div>
 		</h1>
 		<div className="main-buttons secondary-list main-list d-flex flex-column align-items-center">

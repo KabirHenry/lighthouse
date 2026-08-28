@@ -10,6 +10,7 @@ import PencilIcon from '../assets/pencil.svg';
 import ItemIcon from '../assets/item.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
+import { SEPARATOR } from '../constants';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 import { parseIDList } from '../utils/params';
@@ -124,7 +125,7 @@ function Items() {
 						</div>
 						<div className='secondary-list-data'>
 							<Button>{item.name}</Button>
-							<div>{location.name}, {room.name}</div>
+							<div>{location.name}{SEPARATOR}{room.name}</div>
 						</div>
 						<div className="main-list-item-actions-after">
 							<IconLink
