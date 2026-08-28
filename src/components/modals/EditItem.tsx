@@ -64,6 +64,7 @@ function EditItem() {
 					onRoomChange={handleRoomChange}
 					onLocationChange={setLocationID}
 				/>
+				<div className='modal-hint'>{t('picture.editHint', { name: item?.name ?? '' })}</div>
 				<div className="app-modal-footer d-flex flex-row justify-content-between w-100">
 					<Button disabled={!shouldUpdate} className='confirm'>{t('confirm')}</Button>
 					<Button type='button' className='cancel' onClick={close}>{t('cancel')}</Button>

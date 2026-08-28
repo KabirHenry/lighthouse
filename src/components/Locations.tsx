@@ -9,6 +9,7 @@ import PencilIcon from '../assets/pencil.svg';
 import DrawerIcon from '../assets/drawer.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
+import { SecondaryListPicture } from './SecondaryListPicture';
 import LightHousePixel from './LightHousePixel';
 import { SEPARATOR } from '../constants';
 import useHomesContext from '../hooks/useHomesContext';
@@ -59,11 +60,11 @@ function Locations() {
 								alt={t('locations.delete')}
 								className='bare d-none d-md-block'
 							/>
-							<IconLink
+							<SecondaryListPicture
 								to={`/locations/${location.id}/upload?room=${roomID}`}
-								src={DrawerIcon}
+								pictureID={location.pictureID}
+								fallbackSrc={DrawerIcon}
 								alt={t('locations.picture')}
-								className='bare secondary-list-icon'
 							/>
 						</div>
 						<div className='secondary-list-data'>

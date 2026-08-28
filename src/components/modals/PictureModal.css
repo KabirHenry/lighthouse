@@ -9,7 +9,7 @@
 .picture-drop {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 160px;
   border-radius: 20px;
   border: 3px dashed var(--colour-modal-text-muted);
   background: var(--colour-modal-input-background);
@@ -18,6 +18,12 @@
   display: grid;
   place-items: center;
   box-shadow: 0 8px 12px -6px var(--colour-modal-sheet-drop-shadow);
+}
+
+@media (min-width: 768px) {
+  .picture-drop {
+    height: 250px;
+  }
 }
 
 .picture-drop.has-image {
@@ -29,10 +35,25 @@
   box-shadow: 0 0 0 4px var(--colour-modal-sheet-drop-shadow);
 }
 
-.picture-drop img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.picture-drop-figure {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.picture-drop-figure img {
+  display: block;
+  max-width: 100%;
+  max-height: 154px;
+  width: auto;
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .picture-drop-figure img {
+    max-height: 244px;
+  }
 }
 
 .picture-drop-empty {

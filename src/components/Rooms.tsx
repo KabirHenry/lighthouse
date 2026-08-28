@@ -8,6 +8,7 @@ import PencilIcon from '../assets/pencil.svg';
 import RoomIcon from '../assets/room.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
+import { SecondaryListPicture } from './SecondaryListPicture';
 import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
@@ -49,11 +50,11 @@ function Rooms() {
 								alt={t('rooms.delete')}
 								className='bare d-none d-md-block'
 							/>
-							<IconLink
+							<SecondaryListPicture
 								to={`/rooms/${room.id}/upload`}
-								src={RoomIcon}
+								pictureID={room.pictureID}
+								fallbackSrc={RoomIcon}
 								alt={t('rooms.picture')}
-								className='bare secondary-list-icon'
 							/>
 						</div>
 						<div className='secondary-list-data'>

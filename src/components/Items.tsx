@@ -10,6 +10,7 @@ import PencilIcon from '../assets/pencil.svg';
 import ItemIcon from '../assets/item.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
+import { SecondaryListPicture } from './SecondaryListPicture';
 import { SEPARATOR } from '../constants';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
@@ -117,11 +118,11 @@ function Items() {
 								alt={t('items.delete')}
 								className='bare d-none d-md-block'
 							/>
-							<IconLink
+							<SecondaryListPicture
 								to={`/items/${item.id}/upload${query}`}
-								src={ItemIcon}
+								pictureID={item.pictureID}
+								fallbackSrc={ItemIcon}
 								alt={t('items.picture')}
-								className='bare secondary-list-icon'
 							/>
 						</div>
 						<div className='secondary-list-data'>

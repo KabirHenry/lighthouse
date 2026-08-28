@@ -1,4 +1,10 @@
-import { type DBSchema, type IDBPDatabase, openDB } from 'idb';
+import {
+	type DBSchema,
+	type IDBPDatabase,
+	type IDBPTransaction,
+	type StoreNames,
+	openDB,
+} from 'idb';
 
 const DB_NAME = 'LightHouseDB';
 const DB_VERSION = 5;
@@ -126,11 +132,53 @@ interface LighthouseDBSchema extends DBSchema {
 	};
 }
 
+/**
+ * A readwrite transaction wide enough for the cascade helpers. Callers open a
+ * transaction over exactly the stores their cascade will touch; the helpers only
+ * ever reach for the stores relevant to the entity they were handed.
+ */
+type CascadeTx = IDBPTransaction<LighthouseDBSchema, StoreNames<LighthouseDBSchema>[], 'readwrite'>;
+
 export class HomeService {
 	private db: IDBPDatabase<LighthouseDBSchema>;
 
 	constructor(db: IDBPDatabase<LighthouseDBSchema>) {
 		this.db = db;
+	}
+
+	/** Delete a picture row if the id is set. Central choke point for every delete path. */
+	private async purgePicture(tx: CascadeTx, pictureID: PictureID | undefined): Promise<void> {
+		if (pictureID !== undefined) {
+			await tx.objectStore(Stores.PICTURES).delete(pictureID);
+		}
+	}
+
+	/** Delete an item and its picture within an existing transaction. */
+	private async deleteItemWithin(tx: CascadeTx, item: Item): Promise<void> {
+		await this.purgePicture(tx, item.pictureID);
+		await tx.objectStore(Stores.ITEMS).delete(item.id);
+	}
+
+	/** Delete a location, all of its items, and every associated picture. */
+	private async deleteLocationWithin(tx: CascadeTx, location: Location): Promise<void> {
+		const items = await tx.objectStore(Stores.ITEMS).index('locationID').getAll(location.id);
+		for (const item of items) {
+			await this.deleteItemWithin(tx, item);
+		}
+
+		await this.purgePicture(tx, location.pictureID);
+		await tx.objectStore(Stores.LOCATIONS).delete(location.id);
+	}
+
+	/** Delete a room, all of its locations and items, and every associated picture. */
+	private async deleteRoomWithin(tx: CascadeTx, room: Room): Promise<void> {
+		const locations = await tx.objectStore(Stores.LOCATIONS).index('roomID').getAll(room.id);
+		for (const location of locations) {
+			await this.deleteLocationWithin(tx, location);
+		}
+
+		await this.purgePicture(tx, room.pictureID);
+		await tx.objectStore(Stores.ROOMS).delete(room.id);
 	}
 
 	async homes(): Promise<{ homes: Home[]; currentHome: Home }> {
@@ -164,13 +212,22 @@ export class HomeService {
 	}
 
 	async deleteHome(id: HomeID): Promise<void> {
-		const tx = this.db.transaction([Stores.HOMES, Stores.LOCAL], 'readwrite');
+		const tx = this.db.transaction(
+			[Stores.HOMES, Stores.ROOMS, Stores.LOCATIONS, Stores.ITEMS, Stores.PICTURES, Stores.LOCAL],
+			'readwrite',
+		);
 		const homeStore = tx.objectStore(Stores.HOMES);
 
 		// Skip deletion if this is the only home
 		const homes = await homeStore.getAll();
 		if (homes.length <= 1) {
+			await tx.done;
 			return;
+		}
+
+		const rooms = await tx.objectStore(Stores.ROOMS).index('homeID').getAll(id);
+		for (const room of rooms) {
+			await this.deleteRoomWithin(tx, room);
 		}
 
 		await homeStore.delete(id);
@@ -226,27 +283,9 @@ export class HomeService {
 		const tx = this.db.transaction([Stores.ROOMS, Stores.LOCATIONS, Stores.ITEMS, Stores.PICTURES], 'readwrite');
 
 		const room = await tx.objectStore(Stores.ROOMS).get(id);
-		const locations = await tx.objectStore(Stores.LOCATIONS).index('roomID').getAll(id);
-
-		for (const location of locations) {
-			const items = await tx.objectStore(Stores.ITEMS).index('locationID').getAll(location.id);
-			for (const item of items) {
-				if (item.pictureID) {
-					await tx.objectStore(Stores.PICTURES).delete(item.pictureID);
-				}
-				await tx.objectStore(Stores.ITEMS).delete(item.id);
-			}
-
-			if (location.pictureID) {
-				await tx.objectStore(Stores.PICTURES).delete(location.pictureID);
-			}
-			await tx.objectStore(Stores.LOCATIONS).delete(location.id);
+		if (room) {
+			await this.deleteRoomWithin(tx, room);
 		}
-
-		if (room?.pictureID) {
-			await tx.objectStore(Stores.PICTURES).delete(room.pictureID);
-		}
-		await tx.objectStore(Stores.ROOMS).delete(id);
 
 		await tx.done;
 	}
@@ -289,19 +328,9 @@ export class HomeService {
 		const tx = this.db.transaction([Stores.LOCATIONS, Stores.ITEMS, Stores.PICTURES], 'readwrite');
 
 		const location = await tx.objectStore(Stores.LOCATIONS).get(id);
-		const items = await tx.objectStore(Stores.ITEMS).index('locationID').getAll(id);
-
-		for (const item of items) {
-			if (item.pictureID) {
-				await tx.objectStore(Stores.PICTURES).delete(item.pictureID);
-			}
-			await tx.objectStore(Stores.ITEMS).delete(item.id);
+		if (location) {
+			await this.deleteLocationWithin(tx, location);
 		}
-
-		if (location?.pictureID) {
-			await tx.objectStore(Stores.PICTURES).delete(location.pictureID);
-		}
-		await tx.objectStore(Stores.LOCATIONS).delete(id);
 
 		await tx.done;
 	}
@@ -335,10 +364,9 @@ export class HomeService {
 		const tx = this.db.transaction([Stores.ITEMS, Stores.PICTURES], 'readwrite');
 
 		const item = await tx.objectStore(Stores.ITEMS).get(id);
-		if (item?.pictureID) {
-			await tx.objectStore(Stores.PICTURES).delete(item.pictureID);
+		if (item) {
+			await this.deleteItemWithin(tx, item);
 		}
-		await tx.objectStore(Stores.ITEMS).delete(id);
 
 		await tx.done;
 	}

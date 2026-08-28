@@ -101,6 +101,9 @@ function PictureModal({ type }: { type: PictureOwnerType }) {
 	const shownUrl = fileUrl ?? (cleared ? null : existing?.url ?? null);
 	const shownMime = file?.type ?? (cleared ? null : existing?.mimeType ?? null);
 	const hasPendingChange = file !== null || (cleared && pictureID !== undefined);
+	// Enabled when there is a picture to act on: a freshly picked file, or the
+	// entity's saved picture that has not been cleared this session.
+	const canClear = file !== null || (!cleared && pictureID !== undefined);
 
 	const acceptFile = (candidate: File | null | undefined) => {
 		if (candidate && candidate.type.startsWith('image/')) {
@@ -163,12 +166,12 @@ function PictureModal({ type }: { type: PictureOwnerType }) {
 					onDrop={handleDrop}
 				>
 					{shownUrl ? (
-						<>
+						<div className='picture-drop-figure'>
 							<img src={shownUrl} alt={name} />
 							<div className='picture-drop-overlay'>
 								<CameraIcon />
 							</div>
-						</>
+						</div>
 					) : (
 						<div className='picture-drop-empty'>
 							<CameraIcon />
@@ -187,10 +190,10 @@ function PictureModal({ type }: { type: PictureOwnerType }) {
 				/>
 				<div className='app-modal-footer d-flex flex-column w-100'>
 					<div className='d-flex flex-row justify-content-between w-100'>
-						<Button type='button' className='muted' disabled={!shownUrl} onClick={handleClear}>
+						<Button type='button' className='muted' disabled={!canClear} onClick={handleClear}>
 							{t('clear')}
 						</Button>
-						<Button type='button' disabled={!shownUrl} onClick={handleDownload}>
+						<Button type='button' className='muted' disabled={!canClear} onClick={handleDownload}>
 							{t('picture.download')}
 						</Button>
 					</div>

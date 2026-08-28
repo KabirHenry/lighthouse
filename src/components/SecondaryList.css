@@ -4,6 +4,11 @@
   width: 90px !important;
 }
 
+.secondary-list-icon-picture img {
+  object-fit: contain;
+  border-radius: 8px;
+}
+
 .secondary-list-data {
   margin-top: 10px;
   min-width: 120px !important;

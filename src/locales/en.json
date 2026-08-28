@@ -79,7 +79,8 @@
     "picture": "Item picture"
   },
   "picture": {
-    "prompt": "Tap below to update the {{name}}'s picture:",
+    "prompt": "Tap below to update {{name}}'s picture:",
+    "editHint": "To update {{name}}'s picture, tap its icon in the list.",
     "update": "Update",
     "download": "Download"
   }
