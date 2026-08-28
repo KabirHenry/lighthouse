@@ -48,30 +48,7 @@ function EditRoom() {
 				/>
 				<div className='w-100 mt-2'>
 					<Dropdown
-						options={[
-							...homes,
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-							// { id: -1, name: t('homes.unknown') },
-						].map((home) => ({ value: home.id, label: home.name }))}
+						options={homes.map((home) => ({ value: home.id, label: home.name }))}
 						value={homeID}
 						onChange={setHomeID}
 					/>
