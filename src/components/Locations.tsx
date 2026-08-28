@@ -14,7 +14,7 @@ import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 import type { RoomID } from '../services';
 
-import './Rooms.css';
+import './SecondaryList.css';
 
 function Locations() {
 	const { t } = useTranslation();
@@ -46,7 +46,7 @@ function Locations() {
 				{room?.name}, {home?.name}
 			</div>
 		</h1>
-		<div className="main-buttons rooms-items main-list d-flex flex-column align-items-center">
+		<div className="main-buttons secondary-list main-list d-flex flex-column align-items-center">
 			{
 				locations.map(({ location, itemCount }) => (
 					<div className="main-list-item" key={location.id}>
@@ -61,10 +61,10 @@ function Locations() {
 							<IconLink
 								src={RoomIcon}
 								alt={t('homes.delete')}
-								className='bare room-icon'
+								className='bare secondary-list-icon'
 							/>
 						</div>
-						<div className='room-data'>
+						<div className='secondary-list-data'>
 							<Link to={`/items?via=locations&location=${location.id}&room=${roomID}`}>
 								<Button>{location.name}</Button>
 							</Link>

@@ -1,16 +1,16 @@
-.room-icon,
-.room-icon img {
+.secondary-list-icon,
+.secondary-list-icon img {
   height: 90px !important;
   width: 90px !important;
 }
 
-.room-data {
+.secondary-list-data {
   margin-top: 10px;
   min-width: 120px !important;
   text-align: start;
 }
 
-.room-data .btn {
+.secondary-list-data .btn {
   width: 100%;
   padding: 0 10px !important;
   font-size: 24px;
@@ -21,50 +21,50 @@
   hyphens: auto;
 }
 
-.rooms-items .main-list-item {
+.secondary-list .main-list-item {
   gap: 10px;
   align-items: start;
 }
 
-.rooms-items .main-list-item-actions-before {
+.secondary-list .main-list-item-actions-before {
   margin: 0;
   padding: 0;
   gap: 0;
 }
 
-.rooms-items .main-list-item-actions-after {
+.secondary-list .main-list-item-actions-after {
   margin-top: 10px;
   align-self: flex-start;
   justify-self: flex-end;
   gap: 8px;
 }
 
-.rooms-items .main-list-item-actions-after .btn,
-.rooms-items .main-list-item-actions-after img {
+.secondary-list .main-list-item-actions-after .btn,
+.secondary-list .main-list-item-actions-after img {
   width: 25px !important;
   height: 25px !important;
 }
 
 @media (min-width: 768px) {
-  .rooms-items .main-list-item-actions-after {
+  .secondary-list .main-list-item-actions-after {
     align-self: center;
     justify-self: center;
     gap: 8px;
     margin: 0;
   }
 
-  .rooms-items .room-data {
+  .secondary-list .secondary-list-data {
     font-size: 20px;
     min-width: 800px !important;
   }
 
-  .room-data .btn {
+  .secondary-list-data .btn {
     font-size: 32px;
     width: auto;
   }
 
-  .rooms-items .main-list-item-actions-after .btn,
-  .rooms-items .main-list-item-actions-after img {
+  .secondary-list .main-list-item-actions-after .btn,
+  .secondary-list .main-list-item-actions-after img {
     width: 40px !important;
     height: 40px !important;
   }

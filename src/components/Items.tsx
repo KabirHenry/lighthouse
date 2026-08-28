@@ -14,7 +14,7 @@ import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 import type { LocationID } from '../services';
 
-import './Rooms.css';
+import './SecondaryList.css';
 
 function Items() {
 	const { t } = useTranslation();
@@ -57,7 +57,7 @@ function Items() {
 				{home?.name}
 			</div>
 		</h1>
-		<div className="main-buttons rooms-items main-list d-flex flex-column align-items-center">
+		<div className="main-buttons secondary-list main-list d-flex flex-column align-items-center">
 			{
 				scoped.map(({ item, location, room }) => (
 					<div className="main-list-item" key={item.id}>
@@ -72,10 +72,10 @@ function Items() {
 							<IconLink
 								src={RoomIcon}
 								alt={t('items.delete')}
-								className='bare room-icon'
+								className='bare secondary-list-icon'
 							/>
 						</div>
-						<div className='room-data'>
+						<div className='secondary-list-data'>
 							<Button>{item.name}</Button>
 							<div>{location.name}, {room.name}</div>
 						</div>

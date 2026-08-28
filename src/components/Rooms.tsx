@@ -12,7 +12,7 @@ import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 
-import './Rooms.css';
+import './SecondaryList.css';
 
 function Rooms() {
 	const { t } = useTranslation();
@@ -37,7 +37,7 @@ function Rooms() {
 				{activeHome?.name}
 			</div>
 		</h1>
-		<div className="main-buttons rooms-items main-list d-flex flex-column align-items-center">
+		<div className="main-buttons secondary-list main-list d-flex flex-column align-items-center">
 			{
 				rooms.map(({ room, locationCount, itemCount }) => (
 					<div className="main-list-item" key={room.id}>
@@ -53,10 +53,10 @@ function Rooms() {
 								to={`/rooms/${room.id}/upload`}
 								src={RoomIcon}
 								alt={t('homes.delete')}
-								className='bare room-icon'
+								className='bare secondary-list-icon'
 							/>
 						</div>
-						<div className='room-data'>
+						<div className='secondary-list-data'>
 							<Link to={`/locations?room=${room.id}`}>
 								<Button>{room.name}</Button>
 							</Link>
