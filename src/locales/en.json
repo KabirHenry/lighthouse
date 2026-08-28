@@ -78,6 +78,12 @@
     "selectLocations": "Filter by location",
     "picture": "Item picture"
   },
+  "pwa": {
+    "updateTitle": "Update available",
+    "updateDescription": "A new version of Lighthouse is ready. Reload to get the latest changes.",
+    "reload": "Reload",
+    "dismiss": "Later"
+  },
   "picture": {
     "prompt": "Tap below to update {{name}}'s picture:",
     "editHint": "To update {{name}}'s picture, tap its icon in the list.",

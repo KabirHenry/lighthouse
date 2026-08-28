@@ -27,6 +27,7 @@ import PictureModal from './components/modals/PictureModal';
 import Reminders from './components/Reminders';
 import Backup from './components/Backup';
 import About from './components/About';
+import PWAPrompt from './components/modals/PWAPrompt';
 
 function App() {
 	return (
@@ -64,6 +65,7 @@ function App() {
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Container>
+			<PWAPrompt />
 		</HomesProvider>
 	);
 }
