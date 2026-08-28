@@ -1,6 +1,7 @@
 :root {
   --colour-modal-background: #cbcbcb;
   --colour-modal-text: #000000;
+  --colour-modal-text-muted: #6f6f6f;
   --colour-modal-input-background: #f3f3f3;
   --colour-modal-sheet-drop-shadow: #ffddad;
   --colour-modal-dropdown-divider: #e8def8;
@@ -48,6 +49,17 @@
   color: var(--colour-modal-text);
   margin-top: 6px;
   padding: 0;
+}
+
+.btn.muted {
+  color: var(--colour-modal-text-muted) !important;
+}
+
+.app-modal .btn.muted:hover,
+.app-modal .btn.muted:focus,
+.app-modal .btn.muted:active,
+.app-modal .btn.muted.active {
+  color: var(--colour-text) !important;
 }
 
 .app-modal input[type="text"] {

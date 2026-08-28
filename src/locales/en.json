@@ -68,6 +68,7 @@
     "selectRoom": "Select a room",
     "selectLocation": "Select a location",
     "roomNoLocations": "{{name}} (no locations)",
+    "nameNoItems": "{{name}} (no items)",
     "deleteConfirm": "This will delete \"{{name}}\".",
     "sortFilter": "Sort/Filter",
     "selectRooms": "Filter by room",

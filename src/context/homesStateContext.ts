@@ -1,6 +1,16 @@
 import { createContext } from 'react';
 
-import type { Home, HomeID, ItemID, ItemInfo, LocationID, LocationInfo, RoomID, RoomInfo } from '../services';
+import type {
+	Home,
+	HomeID,
+	ItemID,
+	ItemInfo,
+	LocationID,
+	LocationInfo,
+	LocationRoomInfo,
+	RoomID,
+	RoomInfo,
+} from '../services';
 
 export type HomesContextValue = {
 	isLoaded: boolean;
@@ -10,6 +20,8 @@ export type HomesContextValue = {
 	locations: LocationInfo[];
 	locationsRoomID: RoomID | null;
 	allItems: ItemInfo[];
+	allLocations: LocationRoomInfo[];
+	loadAllLocations: () => Promise<void>;
 	addHome: (name: string, description?: string) => Promise<HomeID | undefined>;
 	updateHome: (id: HomeID, name: string, description?: string) => Promise<void>;
 	deleteHome: (id: HomeID) => Promise<void>;

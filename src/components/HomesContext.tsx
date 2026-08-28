@@ -11,6 +11,7 @@ import {
 	type ItemInfo,
 	type LocationID,
 	type LocationInfo,
+	type LocationRoomInfo,
 	type RoomID,
 	type RoomInfo,
 } from '../services';
@@ -23,6 +24,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 	const [locations, setLocations] = useState<LocationInfo[]>([]);
 	const [locationsRoomID, setLocationsRoomID] = useState<RoomID | null>(null);
 	const [allItems, setAllItems] = useState<ItemInfo[]>([]);
+	const [allLocations, setAllLocations] = useState<LocationRoomInfo[]>([]);
 
 	const isLoaded = homeService !== null && home !== null;
 
@@ -169,10 +171,28 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		setAllItems(result);
 	}, [homeService, home]);
 
+	const loadAllLocations = useCallback(async () => {
+		if (!homeService || !home) {
+			return;
+		}
+
+		const roomInfos = await homeService.rooms(home.id);
+		const result: LocationRoomInfo[] = [];
+		for (const { room } of roomInfos) {
+			const locationInfos = await homeService.locations(room.id);
+			for (const { location, itemCount } of locationInfos) {
+				result.push({ location, room, itemCount });
+			}
+		}
+
+		setAllLocations(result);
+	}, [homeService, home]);
+
 	const refreshAfterItemChange = async () => {
 		await Promise.all([
 			locationsRoomID === null ? Promise.resolve() : loadLocations(locationsRoomID),
 			loadAllItems(),
+			loadAllLocations(),
 			reloadRooms(),
 		]);
 	};
@@ -261,6 +281,8 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		locations,
 		locationsRoomID,
 		allItems,
+		allLocations,
+		loadAllLocations,
 		addHome,
 		updateHome,
 		deleteHome,

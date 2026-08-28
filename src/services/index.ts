@@ -64,6 +64,12 @@ export type LocationInfo = {
 	itemCount: number;
 };
 
+export type LocationRoomInfo = {
+	location: Location;
+	room: Room;
+	itemCount: number;
+};
+
 export type ItemInfo = {
 	item: Item;
 	location: Location;
