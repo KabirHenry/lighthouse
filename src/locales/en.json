@@ -86,6 +86,7 @@
     "updateTitle": "Update available",
     "updateDescription": "A new version of Lighthouse is ready. Reload to get the latest changes.",
     "reload": "Reload",
+    "reloading": "Reloading…",
     "dismiss": "Later"
   },
   "install": {
