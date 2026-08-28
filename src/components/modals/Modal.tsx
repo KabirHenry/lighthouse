@@ -17,7 +17,9 @@ function Modal({
 		}
 
 		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') {
+			// Skip if a nested control (e.g. an open dropdown menu) already handled
+			// the key press, so Escape closes that first rather than the modal.
+			if (event.key === 'Escape' && !event.defaultPrevented) {
 				onClose();
 			}
 		};

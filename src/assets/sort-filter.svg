@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 6 54 42" style="max-height: 500px" width="54" height="42">
+<path fill="white" d="M24 18V12H18V18H24Z"/>
+<path fill="white" d="M24 24V18H18V24H24Z"/>
+<path fill="white" d="M24 30V24H18V30H24Z"/>
+<path fill="white" d="M24 36V30H18V36H24Z"/>
+<path fill="white" d="M24 42V36H18V42H24Z"/>
+<path fill="white" d="M18 24V18H12V24H18Z"/>
+<path fill="white" d="M12 30V24H6V30H12Z"/>
+<path fill="white" d="M36 18V12H30V18H36Z"/>
+<path fill="white" d="M36 24V18H30V24H36Z"/>
+<path fill="white" d="M36 30V24H30V30H36Z"/>
+<path fill="white" d="M36 36V30H30V36H36Z"/>
+<path fill="white" d="M36 42V36H30V42H36Z"/>
+<path fill="white" d="M42 36V30H36V36H42Z"/>
+<path fill="white" d="M48 30V24H42V30H48Z"/>
+</svg>

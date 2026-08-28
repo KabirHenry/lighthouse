@@ -12,21 +12,21 @@ import { DividerBar, dropdownStyles, type DropdownOption } from './dropdownStyle
 
 import './Modal.css';
 
-function Dropdown<T extends string | number>({
+function MultiSelect<T extends string | number>({
 	options,
 	value,
 	onChange,
 	placeholder,
 }: {
 	options: DropdownOption<T>[];
-	value: T | undefined;
-	onChange: (value: T) => void;
+	value: T[];
+	onChange: (value: T[]) => void;
 	placeholder?: string;
 }) {
-	const selected = options.find((option) => option.value === value) ?? null;
+	const selected = options.filter((option) => value.includes(option.value));
 
 	const DropdownIndicator = useMemo(() => {
-		return function DropdownIndicator(props: DropdownIndicatorProps<DropdownOption<T>, false>) {
+		return function DropdownIndicator(props: DropdownIndicatorProps<DropdownOption<T>, true>) {
 			return (
 				<components.DropdownIndicator {...props}>
 					<img
@@ -40,7 +40,7 @@ function Dropdown<T extends string | number>({
 	}, []);
 
 	const Option = useMemo(() => {
-		return function Option(props: OptionProps<DropdownOption<T>, false>) {
+		return function Option(props: OptionProps<DropdownOption<T>, true>) {
 			const isLast = props.selectProps.options[props.selectProps.options.length - 1] === props.data;
 
 			return (
@@ -53,7 +53,7 @@ function Dropdown<T extends string | number>({
 	}, []);
 
 	const Menu = useMemo(() => {
-		return function Menu(props: MenuProps<DropdownOption<T>, false>) {
+		return function Menu(props: MenuProps<DropdownOption<T>, true>) {
 			return (
 				<components.Menu {...props}>
 					<DividerBar />
@@ -64,23 +64,23 @@ function Dropdown<T extends string | number>({
 	}, []);
 
 	return (
-		<Select<DropdownOption<T>>
+		<Select<DropdownOption<T>, true>
 			classNamePrefix="app-dropdown"
-			styles={dropdownStyles<T>()}
+			styles={dropdownStyles<T, true>()}
 			options={options}
 			value={selected}
-			onChange={(option) => {
-				if (option) {
-					onChange(option.value);
-				}
-			}}
+			onChange={(chosen) => onChange(chosen.map((option) => option.value))}
 			placeholder={placeholder}
 			isOptionDisabled={(option) => Boolean(option.isDisabled)}
 			isSearchable={false}
+			isMulti
+			closeMenuOnSelect={false}
+			hideSelectedOptions={false}
+			backspaceRemovesValue={false}
 			menuPortalTarget={document.body}
 			components={{ DropdownIndicator, Option, Menu }}
 		/>
 	);
 }
 
-export default Dropdown;
+export default MultiSelect;

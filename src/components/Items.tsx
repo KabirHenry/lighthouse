@@ -3,16 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useSearchParams } from 'react-router';
 
 import PlusIcon from '../assets/plus.svg';
+import SortFilterIcon from '../assets/sort-filter.svg';
 import BackLeftIcon from '../assets/back-left.svg';
 import DustbinIcon from '../assets/dustbin.svg';
 import PencilIcon from '../assets/pencil.svg';
 import ItemIcon from '../assets/item.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
-import LightHousePixel from './LightHousePixel';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
-import type { LocationID } from '../services';
+import { parseIDList } from '../utils/params';
+import type { LocationID, RoomID } from '../services';
 
 import './SecondaryList.css';
 
@@ -20,15 +21,32 @@ function Items() {
 	const { t } = useTranslation();
 	const { home, allItems, loadAllItems } = useHomesContext();
 	const [searchParams] = useSearchParams();
-	const locationParam = searchParams.get('location');
-	const locationID = locationParam === null ? null : (Number(locationParam) as LocationID);
 
 	const fromLocations = searchParams.get('via') === 'locations';
 	const roomParam = searchParams.get('room');
 
-	const scoped = locationID === null
-		? allItems
-		: allItems.filter((info) => info.location.id === locationID);
+	// `location=` is a single-location drill-down and is only honoured when we
+	// arrived here from the Locations page (`via=locations`).
+	const locationParam = searchParams.get('location');
+	const viaLocationID = fromLocations && locationParam !== null
+		? (Number(locationParam) as LocationID)
+		: null;
+
+	const roomsFilter = parseIDList<RoomID>(searchParams.get('rooms'));
+	const locationsFilter = parseIDList<LocationID>(searchParams.get('locations'));
+
+	const scoped = (() => {
+		if (viaLocationID !== null) {
+			return allItems.filter((info) => info.location.id === viaLocationID);
+		}
+
+		if (roomsFilter.length === 0 && locationsFilter.length === 0) {
+			return allItems;
+		}
+
+		return allItems.filter((info) =>
+			roomsFilter.includes(info.room.id) || locationsFilter.includes(info.location.id));
+	})();
 
 	const goBack = useSmartBack(fromLocations ? `/locations?room=${roomParam}` : '/');
 
@@ -39,15 +57,28 @@ function Items() {
 	const search = searchParams.toString();
 	const query = search ? `?${search}` : '';
 
+	// Carry the currently active filters into the modal so it opens pre-populated.
+	const filterParams = new URLSearchParams();
+	if (viaLocationID !== null) {
+		filterParams.set('locations', String(viaLocationID));
+	} else {
+		if (roomsFilter.length > 0) {
+			filterParams.set('rooms', roomsFilter.join(','));
+		}
+		if (locationsFilter.length > 0) {
+			filterParams.set('locations', locationsFilter.join(','));
+		}
+	}
+	const filterSearch = filterParams.toString();
+	const filterQuery = filterSearch ? `?${filterSearch}` : '';
+
 	return <>
 		<div className="align-self-end">
 			<IconLink onClick={goBack} src={BackLeftIcon} alt={t('home.back')} className='bare' />
 		</div>
 		<h1 className="main-title">
 			<div className='main-title-actions-before'>
-				<span className="lighthouse-anchor">
-					<LightHousePixel style={{ top: '2px', left: -3 }} />
-				</span>
+				<IconLink to={`/items/filter${filterQuery}`} src={SortFilterIcon} alt={t('items.sortFilter')} scale='70%' />
 			</div>
 			<span className="main-title-text">{t('pages.items')}</span>
 			<div className="main-title-actions-after">

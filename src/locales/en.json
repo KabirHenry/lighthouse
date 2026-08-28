@@ -43,6 +43,8 @@
   },
   "confirm": "Confirm",
   "cancel": "Cancel",
+  "apply": "Apply",
+  "clear": "Clear",
   "areYouSure": "Are you sure?",
   "rooms": {
     "add": "Add Room",
@@ -66,6 +68,9 @@
     "selectRoom": "Select a room",
     "selectLocation": "Select a location",
     "roomNoLocations": "{{name}} (no locations)",
-    "deleteConfirm": "This will delete \"{{name}}\"."
+    "deleteConfirm": "This will delete \"{{name}}\".",
+    "sortFilter": "Sort/Filter",
+    "selectRooms": "Filter by room",
+    "selectLocations": "Filter by location"
   }
 }

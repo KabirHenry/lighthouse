@@ -14,6 +14,7 @@ import Items from './components/Items';
 import AddItem from './components/modals/AddItem';
 import EditItem from './components/modals/EditItem';
 import DeleteItem from './components/modals/DeleteItem';
+import FilterItems from './components/modals/FilterItems';
 import Rooms from './components/Rooms';
 import AddRoom from './components/modals/AddRoom';
 import EditRoom from './components/modals/EditRoom';
@@ -33,6 +34,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/items" element={<Items/>}>
+						<Route path="filter" element={<FilterItems/>} />
 						<Route path="new" element={<AddItem/>} />
 						<Route path=":id" element={<EditItem/>} />
 						<Route path=":id/delete" element={<DeleteItem/>} />
