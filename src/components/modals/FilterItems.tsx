@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 import useHomesContext from '../../hooks/useHomesContext';
 import useSmartBack from '../../hooks/useSmartBack';
 import { parseIDList } from '../../utils/params';
+import SearchIcon from '../../assets/search.svg';
 import Button from '../Button';
 import Modal from './Modal';
 import MultiSelect from './MultiSelect';
@@ -31,6 +32,7 @@ function FilterItems() {
 		void loadAllLocations();
 	}, [loadAllLocations]);
 
+	const [searchText, setSearchText] = useState(() => searchParams.get('search') ?? '');
 	const [selectedRooms, setSelectedRooms] = useState<RoomID[]>(
 		() => parseIDList<RoomID>(searchParams.get('rooms')),
 	);
@@ -61,6 +63,10 @@ function FilterItems() {
 
 	const handleApply = () => {
 		const params = new URLSearchParams();
+		const trimmedSearch = searchText.trim();
+		if (trimmedSearch !== '') {
+			params.set('search', trimmedSearch);
+		}
 		if (selectedRooms.length > 0) {
 			params.set('rooms', selectedRooms.join(','));
 		}
@@ -68,13 +74,14 @@ function FilterItems() {
 			params.set('locations', selectedLocations.join(','));
 		}
 
-		const search = params.toString();
+		const query = params.toString();
 		// Replace the modal's own history entry so that "back" from the filtered
 		// list returns to the pre-filter page and the modal never reappears.
-		navigate(search ? `/items?${search}` : '/items', { replace: true });
+		navigate(query ? `/items?${query}` : '/items', { replace: true });
 	};
 
 	const handleClear = () => {
+		setSearchText('');
 		setSelectedRooms([]);
 		setSelectedLocations([]);
 	};
@@ -83,6 +90,22 @@ function FilterItems() {
 		<Modal onClose={close}>
 			<div className='d-flex flex-column align-items-center gap-0'>
 				<h2>{t('items.sortFilter')}</h2>
+				<div className='app-modal-search'>
+					<img className='app-modal-search-icon' src={SearchIcon} alt='' />
+					<input
+						type="text"
+						value={searchText}
+						onChange={(event) => setSearchText(event.target.value)}
+						onKeyDown={(event) => {
+							if (event.key === 'Enter') {
+								event.preventDefault();
+								handleApply();
+							}
+						}}
+						placeholder={t('items.searchPlaceholder')}
+						autoFocus
+					/>
+				</div>
 				<div className='w-100 mt-2'>
 					<MultiSelect
 						options={roomOptions}

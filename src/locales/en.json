@@ -71,6 +71,7 @@
     "nameNoItems": "{{name}} (no items)",
     "deleteConfirm": "This will delete \"{{name}}\".",
     "sortFilter": "Sort/Filter",
+    "searchPlaceholder": "Search by name",
     "selectRooms": "Filter by room",
     "selectLocations": "Filter by location"
   }

@@ -34,18 +34,31 @@ function Items() {
 
 	const roomsFilter = parseIDList<RoomID>(searchParams.get('rooms'));
 	const locationsFilter = parseIDList<LocationID>(searchParams.get('locations'));
+	const searchQuery = (searchParams.get('search') ?? '').trim();
+	const searchTerm = searchQuery.toLowerCase();
 
 	const scoped = (() => {
-		if (viaLocationID !== null) {
-			return allItems.filter((info) => info.location.id === viaLocationID);
+		const byLocationAndRoom = (() => {
+			if (viaLocationID !== null) {
+				return allItems.filter((info) => info.location.id === viaLocationID);
+			}
+
+			if (roomsFilter.length === 0 && locationsFilter.length === 0) {
+				return allItems;
+			}
+
+			return allItems.filter((info) =>
+				roomsFilter.includes(info.room.id) || locationsFilter.includes(info.location.id));
+		})();
+
+		if (searchTerm === '') {
+			return byLocationAndRoom;
 		}
 
-		if (roomsFilter.length === 0 && locationsFilter.length === 0) {
-			return allItems;
-		}
-
-		return allItems.filter((info) =>
-			roomsFilter.includes(info.room.id) || locationsFilter.includes(info.location.id));
+		return byLocationAndRoom.filter(({ item, location, room }) =>
+			item.name.toLowerCase().includes(searchTerm)
+			|| location.name.toLowerCase().includes(searchTerm)
+			|| room.name.toLowerCase().includes(searchTerm));
 	})();
 
 	const goBack = useSmartBack(fromLocations ? `/locations?room=${roomParam}` : '/');
@@ -59,6 +72,9 @@ function Items() {
 
 	// Carry the currently active filters into the modal so it opens pre-populated.
 	const filterParams = new URLSearchParams();
+	if (searchQuery !== '') {
+		filterParams.set('search', searchQuery);
+	}
 	if (viaLocationID !== null) {
 		filterParams.set('locations', String(viaLocationID));
 	} else {

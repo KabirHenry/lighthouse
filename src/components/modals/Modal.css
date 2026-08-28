@@ -74,3 +74,19 @@
   font-size: 26px;
   box-shadow: 0 8px 12px -6px var(--colour-modal-sheet-drop-shadow);
 }
+
+.app-modal-search {
+  position: relative;
+  width: 100%;
+}
+
+.app-modal-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  pointer-events: none;
+}
