@@ -13,6 +13,7 @@ import NotFound from './components/NotFound';
 import Items from './components/Items';
 import Rooms from './components/Rooms';
 import AddRoom from './components/modals/AddRoom';
+import EditRoom from './components/modals/EditRoom';
 import DeleteRoom from './components/modals/DeleteRoom';
 import Locations from './components/Locations';
 import AddLocation from './components/modals/AddLocation';
@@ -30,6 +31,7 @@ function App() {
 					<Route path="/items" element={<Items/>} />
 					<Route path="/rooms" element={<Rooms/>}>
 						<Route path="new" element={<AddRoom/>} />
+						<Route path=":id" element={<EditRoom/>} />
 						<Route path=":id/delete" element={<DeleteRoom/>} />
 					</Route>
 					<Route path="/locations" element={<Locations/>}>

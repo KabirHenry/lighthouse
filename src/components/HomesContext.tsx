@@ -88,6 +88,15 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		return id;
 	};
 
+	const updateRoom = async (id: RoomID, name: string, homeID: HomeID, description?: string) => {
+		if (!homeService) {
+			return;
+		}
+
+		await homeService.updateRoom(id, { name, homeID, description });
+		await reloadRooms();
+	};
+
 	const deleteRoom = async (id: RoomID) => {
 		if (!homeService) {
 			return;
@@ -184,6 +193,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		deleteHome,
 		setActiveHome,
 		addRoom,
+		updateRoom,
 		deleteRoom,
 		loadLocations,
 		addLocation,

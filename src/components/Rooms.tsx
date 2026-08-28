@@ -67,15 +67,13 @@ function Rooms() {
 							<IconLink
 								to={`/rooms/${room.id}/delete`}
 								src={DustbinIcon}
-								// scale='50%'
 								alt={t('rooms.delete')}
 								className='bare d-md-none'
 							/>
 							<IconLink
 								to={`/rooms/${room.id}`}
 								src={PencilIcon}
-								// scale='60%'
-								alt={t('homes.edit')}
+								alt={t('rooms.edit')}
 								className='bare'
 							/>
 						</div>

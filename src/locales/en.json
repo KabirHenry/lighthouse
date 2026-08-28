@@ -41,6 +41,7 @@
   "areYouSure": "Are you sure?",
   "rooms": {
     "add": "Add Room",
+    "edit": "Edit Room",
     "delete": "Delete Room",
     "myNewRoom": "My New Room",
     "deleteConfirm": "This will delete \"{{name}}\" and all its locations and items."
