@@ -17,6 +17,7 @@ export type HomesContextValue = {
 	deleteRoom: (id: RoomID) => Promise<void>;
 	loadLocations: (roomID: RoomID) => Promise<void>;
 	addLocation: (name: string, description?: string) => Promise<LocationID | undefined>;
+	updateLocation: (id: LocationID, name: string, roomID: RoomID, description?: string) => Promise<void>;
 	deleteLocation: (id: LocationID) => Promise<void>;
 };
 

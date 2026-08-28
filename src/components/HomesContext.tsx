@@ -125,6 +125,18 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		return id;
 	};
 
+	const updateLocation = async (id: LocationID, name: string, roomID: RoomID, description?: string) => {
+		if (!homeService) {
+			return;
+		}
+
+		await homeService.updateLocation(id, { name, roomID, description });
+		await Promise.all([
+			locationsRoomID === null ? Promise.resolve() : loadLocations(locationsRoomID),
+			reloadRooms(),
+		]);
+	};
+
 	const deleteLocation = async (id: LocationID) => {
 		if (!homeService || locationsRoomID === null) {
 			return;
@@ -197,6 +209,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		deleteRoom,
 		loadLocations,
 		addLocation,
+		updateLocation,
 		deleteLocation,
 	};
 

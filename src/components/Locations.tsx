@@ -78,7 +78,7 @@ function Locations() {
 								className='bare d-md-none'
 							/>
 							<IconLink
-								to={`/locations/${location.id}`}
+								to={`/locations/${location.id}?room=${roomID}`}
 								src={PencilIcon}
 								alt={t('homes.edit')}
 								className='bare'

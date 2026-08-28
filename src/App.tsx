@@ -17,6 +17,7 @@ import EditRoom from './components/modals/EditRoom';
 import DeleteRoom from './components/modals/DeleteRoom';
 import Locations from './components/Locations';
 import AddLocation from './components/modals/AddLocation';
+import EditLocation from './components/modals/EditLocation';
 import DeleteLocation from './components/modals/DeleteLocation';
 import Reminders from './components/Reminders';
 import Backup from './components/Backup';
@@ -36,6 +37,7 @@ function App() {
 					</Route>
 					<Route path="/locations" element={<Locations/>}>
 						<Route path="new" element={<AddLocation/>} />
+						<Route path=":id" element={<EditLocation/>} />
 						<Route path=":id/delete" element={<DeleteLocation/>} />
 					</Route>
 					<Route path="/reminders" element={<Reminders/>} />

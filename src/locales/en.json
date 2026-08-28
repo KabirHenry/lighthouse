@@ -48,6 +48,7 @@
   },
   "locations": {
     "add": "Add Location",
+    "edit": "Edit Location",
     "delete": "Delete Location",
     "myNewLocation": "My New Location",
     "deleteConfirm": "This will delete \"{{name}}\" and all its items."
