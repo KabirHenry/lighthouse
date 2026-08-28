@@ -15,6 +15,7 @@ import './Modal.css';
 export type DropdownOption<T> = {
 	value: T;
 	label: string;
+	isDisabled?: boolean;
 };
 
 function DividerBar() {
@@ -85,11 +86,12 @@ function dropdownStyles<T>(): StylesConfig<DropdownOption<T>, false> {
 			paddingBottom: 12,
 			background: props.isSelected
 				? 'rgba(0, 0, 0, 0.05)'
-				: props.isFocused
+				: props.isFocused && !props.isDisabled
 					? 'rgba(0, 0, 0, 0.08)'
 					: 'transparent',
 			color: 'var(--colour-modal-text)',
-			cursor: 'pointer',
+			opacity: props.isDisabled ? 0.4 : 1,
+			cursor: props.isDisabled ? 'not-allowed' : 'pointer',
 		}),
 	};
 }
@@ -157,6 +159,7 @@ function Dropdown<T extends string | number>({
 				}
 			}}
 			placeholder={placeholder}
+			isOptionDisabled={(option) => Boolean(option.isDisabled)}
 			isSearchable={false}
 			menuPortalTarget={document.body}
 			components={{ DropdownIndicator, Option, Menu }}

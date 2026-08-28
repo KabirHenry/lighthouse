@@ -7,8 +7,8 @@ import {
 	type Home,
 	type HomeID,
 	type HomeService,
-	type Item,
 	type ItemID,
+	type ItemInfo,
 	type LocationID,
 	type LocationInfo,
 	type RoomID,
@@ -22,8 +22,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 	const [rooms, setRooms] = useState<RoomInfo[]>([]);
 	const [locations, setLocations] = useState<LocationInfo[]>([]);
 	const [locationsRoomID, setLocationsRoomID] = useState<RoomID | null>(null);
-	const [items, setItems] = useState<Item[]>([]);
-	const [itemsLocationID, setItemsLocationID] = useState<LocationID | null>(null);
+	const [allItems, setAllItems] = useState<ItemInfo[]>([]);
 
 	const isLoaded = homeService !== null && home !== null;
 
@@ -150,29 +149,40 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		await Promise.all([loadLocations(locationsRoomID), reloadRooms()]);
 	};
 
-	const loadItems = useCallback(async (locationID: LocationID) => {
-		setItemsLocationID(locationID);
-		if (!homeService) {
+	const loadAllItems = useCallback(async () => {
+		if (!homeService || !home) {
 			return;
 		}
 
-		setItems(await homeService.items(locationID));
-	}, [homeService]);
+		const roomInfos = await homeService.rooms(home.id);
+		const result: ItemInfo[] = [];
+		for (const { room } of roomInfos) {
+			const locationInfos = await homeService.locations(room.id);
+			for (const { location } of locationInfos) {
+				const locationItems = await homeService.items(location.id);
+				for (const item of locationItems) {
+					result.push({ item, location, room });
+				}
+			}
+		}
+
+		setAllItems(result);
+	}, [homeService, home]);
 
 	const refreshAfterItemChange = async () => {
 		await Promise.all([
-			itemsLocationID === null ? Promise.resolve() : loadItems(itemsLocationID),
 			locationsRoomID === null ? Promise.resolve() : loadLocations(locationsRoomID),
+			loadAllItems(),
 			reloadRooms(),
 		]);
 	};
 
-	const addItem = async (name: string, description?: string) => {
-		if (!homeService || itemsLocationID === null) {
+	const addItem = async (locationID: LocationID, name: string, description?: string) => {
+		if (!homeService) {
 			return undefined;
 		}
 
-		const id = await homeService.addItem(itemsLocationID, name, description);
+		const id = await homeService.addItem(locationID, name, description);
 		await refreshAfterItemChange();
 		return id;
 	};
@@ -249,7 +259,8 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		homes,
 		rooms,
 		locations,
-		items,
+		locationsRoomID,
+		allItems,
 		addHome,
 		updateHome,
 		deleteHome,
@@ -261,7 +272,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		addLocation,
 		updateLocation,
 		deleteLocation,
-		loadItems,
+		loadAllItems,
 		addItem,
 		updateItem,
 		deleteItem,

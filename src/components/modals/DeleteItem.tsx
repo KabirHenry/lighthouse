@@ -10,13 +10,13 @@ import Modal from './Modal';
 function DeleteItem() {
 	const { t } = useTranslation();
 	const [searchParams] = useSearchParams();
-	const locationID = searchParams.get('location');
-	const { items, deleteItem } = useHomesContext();
+	const { allItems, deleteItem } = useHomesContext();
 	const { id } = useParams<{ id: string }>();
 
-	const item = items.find((info) => info.id === Number(id));
+	const item = allItems.find((info) => info.item.id === Number(id))?.item;
 
-	const close = useSmartBack(`/items?location=${locationID}`);
+	const search = searchParams.toString();
+	const close = useSmartBack(search ? `/items?${search}` : '/items');
 
 	const handleConfirm = async () => {
 		if (!id) {

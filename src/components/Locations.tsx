@@ -65,7 +65,7 @@ function Locations() {
 							/>
 						</div>
 						<div className='room-data'>
-							<Link to={`/items?location=${location.id}`}>
+							<Link to={`/items?via=locations&location=${location.id}&room=${roomID}`}>
 								<Button>{location.name}</Button>
 							</Link>
 							<div>{itemCount} items</div>

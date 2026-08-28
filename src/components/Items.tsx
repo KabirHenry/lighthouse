@@ -18,16 +18,26 @@ import './Rooms.css';
 
 function Items() {
 	const { t } = useTranslation();
-	const { home, rooms, locations, items, loadItems } = useHomesContext();
+	const { home, allItems, loadAllItems } = useHomesContext();
 	const [searchParams] = useSearchParams();
-	const locationID = Number(searchParams.get('location')) as LocationID;
-	const location = locations.find((info) => info.location.id === locationID)?.location;
-	const room = rooms.find((info) => info.room.id === location?.roomID)?.room;
-	const goBack = useSmartBack(`/locations?room=${location?.roomID}`);
+	const locationParam = searchParams.get('location');
+	const locationID = locationParam === null ? null : (Number(locationParam) as LocationID);
+
+	const fromLocations = searchParams.get('via') === 'locations';
+	const roomParam = searchParams.get('room');
+
+	const scoped = locationID === null
+		? allItems
+		: allItems.filter((info) => info.location.id === locationID);
+
+	const goBack = useSmartBack(fromLocations ? `/locations?room=${roomParam}` : '/');
 
 	useEffect(() => {
-		void loadItems(locationID);
-	}, [loadItems, locationID]);
+		void loadAllItems();
+	}, [loadAllItems]);
+
+	const search = searchParams.toString();
+	const query = search ? `?${search}` : '';
 
 	return <>
 		<div className="align-self-end">
@@ -41,19 +51,19 @@ function Items() {
 			</div>
 			<span className="main-title-text">{t('pages.items')}</span>
 			<div className="main-title-actions-after">
-				<IconLink to={`/items/new?location=${locationID}`} src={PlusIcon} alt={t('items.add')} scale='65%' />
+				<IconLink to={`/items/new${query}`} src={PlusIcon} alt={t('items.add')} scale='65%' />
 			</div>
 			<div className="subheading">
-				{[location?.name, room?.name, home?.name].filter(Boolean).join(', ')}
+				{home?.name}
 			</div>
 		</h1>
 		<div className="main-buttons rooms-items main-list d-flex flex-column align-items-center">
 			{
-				items.map((item) => (
+				scoped.map(({ item, location, room }) => (
 					<div className="main-list-item" key={item.id}>
 						<div className="main-list-item-actions-before">
 							<IconLink
-								to={`/items/${item.id}/delete?location=${locationID}`}
+								to={`/items/${item.id}/delete${query}`}
 								src={DustbinIcon}
 								scale='70%'
 								alt={t('items.delete')}
@@ -67,17 +77,17 @@ function Items() {
 						</div>
 						<div className='room-data'>
 							<Button>{item.name}</Button>
-							{item.description && <div>{item.description}</div>}
+							<div>{location.name}, {room.name}</div>
 						</div>
 						<div className="main-list-item-actions-after">
 							<IconLink
-								to={`/items/${item.id}/delete?location=${locationID}`}
+								to={`/items/${item.id}/delete${query}`}
 								src={DustbinIcon}
 								alt={t('items.delete')}
 								className='bare d-md-none'
 							/>
 							<IconLink
-								to={`/items/${item.id}?location=${locationID}`}
+								to={`/items/${item.id}${query}`}
 								src={PencilIcon}
 								alt={t('items.edit')}
 								className='bare'

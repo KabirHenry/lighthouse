@@ -7,25 +7,43 @@ import useHomesContext from '../../hooks/useHomesContext';
 import useSmartBack from '../../hooks/useSmartBack';
 import Button from '../Button';
 import Modal from './Modal';
+import ItemLocationFields from './ItemLocationFields';
+import type { LocationID, RoomID } from '../../services';
 
 function AddItem() {
 	const { t } = useTranslation();
 	const [searchParams] = useSearchParams();
-	const locationID = searchParams.get('location');
 	const { addItem } = useHomesContext();
+
+	const prefill = searchParams.get('via') === 'locations';
+	const roomParam = searchParams.get('room');
+	const locationParam = searchParams.get('location');
+
 	const [name, setName] = useState('');
+	const [roomID, setRoomID] = useState<RoomID | undefined>(
+		prefill && roomParam ? (Number(roomParam) as RoomID) : undefined,
+	);
+	const [locationID, setLocationID] = useState<LocationID | undefined>(
+		prefill && locationParam ? (Number(locationParam) as LocationID) : undefined,
+	);
 
-	const canSubmit = name.trim() !== '';
+	const canSubmit = name.trim() !== '' && locationID !== undefined;
 
-	const close = useSmartBack(`/items?location=${locationID}`);
+	const search = searchParams.toString();
+	const close = useSmartBack(search ? `/items?${search}` : '/items');
+
+	const handleRoomChange = (value: RoomID) => {
+		setRoomID(value);
+		setLocationID(undefined);
+	};
 
 	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		if (!name.trim()) {
+		if (!name.trim() || locationID === undefined) {
 			return;
 		}
 
-		await addItem(name.trim());
+		await addItem(locationID, name.trim());
 		close();
 	};
 
@@ -42,6 +60,12 @@ function AddItem() {
 					onChange={(event) => setName(event.target.value)}
 					placeholder={t('items.myNewItem')}
 					autoFocus
+				/>
+				<ItemLocationFields
+					roomID={roomID}
+					locationID={locationID}
+					onRoomChange={handleRoomChange}
+					onLocationChange={setLocationID}
 				/>
 				<div className="app-modal-footer d-flex flex-row justify-content-between w-100">
 					<Button disabled={!canSubmit} className='confirm'>{t('confirm')}</Button>

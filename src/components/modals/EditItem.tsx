@@ -1,27 +1,38 @@
 import { useState } from 'react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router';
+import { useParams, useSearchParams } from 'react-router';
 
 import useHomesContext from '../../hooks/useHomesContext';
 import useSmartBack from '../../hooks/useSmartBack';
 import Button from '../Button';
-import Dropdown from './Dropdown';
 import Modal from './Modal';
-import type { LocationID } from '../../services';
+import ItemLocationFields from './ItemLocationFields';
+import type { LocationID, RoomID } from '../../services';
 
 function EditItem() {
 	const { t } = useTranslation();
-	const { items, locations, updateItem } = useHomesContext();
+	const { allItems, updateItem } = useHomesContext();
 	const { id } = useParams<{ id: string }>();
-	const item = items.find((info) => info.id === Number(id));
+	const [searchParams] = useSearchParams();
+
+	const entry = allItems.find((info) => info.item.id === Number(id));
+	const item = entry?.item;
+
 	const [name, setName] = useState(item?.name ?? '');
+	const [roomID, setRoomID] = useState<RoomID | undefined>(entry?.room.id);
 	const [locationID, setLocationID] = useState<LocationID | undefined>(item?.locationID);
 
 	const shouldUpdate = name.trim() !== '' && locationID !== undefined &&
 		(name.trim() !== item?.name || locationID !== item?.locationID);
 
-	const close = useSmartBack(`/items?location=${item?.locationID}`);
+	const search = searchParams.toString();
+	const close = useSmartBack(search ? `/items?${search}` : '/items');
+
+	const handleRoomChange = (value: RoomID) => {
+		setRoomID(value);
+		setLocationID(value === entry?.room.id ? item?.locationID : undefined);
+	};
 
 	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -47,13 +58,12 @@ function EditItem() {
 					placeholder={t('items.myNewItem')}
 					autoFocus
 				/>
-				<div className='w-100 mt-2'>
-					<Dropdown
-						options={locations.map((info) => ({ value: info.location.id, label: info.location.name }))}
-						value={locationID}
-						onChange={setLocationID}
-					/>
-				</div>
+				<ItemLocationFields
+					roomID={roomID}
+					locationID={locationID}
+					onRoomChange={handleRoomChange}
+					onLocationChange={setLocationID}
+				/>
 				<div className="app-modal-footer d-flex flex-row justify-content-between w-100">
 					<Button disabled={!shouldUpdate} className='confirm'>{t('confirm')}</Button>
 					<Button type='button' className='cancel' onClick={close}>{t('cancel')}</Button>

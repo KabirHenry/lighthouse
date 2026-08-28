@@ -58,6 +58,9 @@
     "edit": "Edit Item",
     "delete": "Delete Item",
     "myNewItem": "My New Item",
+    "selectRoom": "Select a room",
+    "selectLocation": "Select a location",
+    "roomNoLocations": "{{name}} (no locations)",
     "deleteConfirm": "This will delete \"{{name}}\"."
   }
 }
