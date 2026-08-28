@@ -76,6 +76,7 @@ h1 {
 }
 
 .btn:disabled {
+  color: var(--colour-text);
   filter: brightness(75%) !important;
   background: var(--colour-button) !important;
 }

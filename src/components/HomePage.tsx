@@ -21,10 +21,10 @@ function HomePage() {
 				<Button>{t('pages.rooms')}</Button>
 			</Link>
 			<Link to="/reminders">
-				<Button>{t('pages.reminders')}</Button>
+				<Button disabled>{t('pages.reminders')}</Button>
 			</Link>
 			<Link to="/backup">
-				<Button>{t('pages.backup')}</Button>
+				<Button disabled>{t('pages.backup')}</Button>
 			</Link>
 			<Link to="/about">
 				<Button>{t('pages.about')}</Button>
