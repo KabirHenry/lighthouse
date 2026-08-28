@@ -28,6 +28,7 @@ import Reminders from './components/Reminders';
 import Backup from './components/Backup';
 import About from './components/About';
 import PWAPrompt from './components/modals/PWAPrompt';
+import InstallPrompt from './components/modals/InstallPrompt';
 
 function App() {
 	return (
@@ -66,6 +67,7 @@ function App() {
 				</Routes>
 			</Container>
 			<PWAPrompt />
+			<InstallPrompt />
 		</HomesProvider>
 	);
 }

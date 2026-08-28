@@ -84,6 +84,14 @@
     "reload": "Reload",
     "dismiss": "Later"
   },
+  "install": {
+    "title": "Install Lighthouse",
+    "description": "Add Lighthouse to your home screen for quick access and offline use.",
+    "iosInstructions": "Tap the Share button, then choose \"Add to Home Screen\".",
+    "action": "Install",
+    "dismiss": "Not now",
+    "gotIt": "Got it"
+  },
   "picture": {
     "prompt": "Tap below to update {{name}}'s picture:",
     "editHint": "To update {{name}}'s picture, tap its icon in the list.",
