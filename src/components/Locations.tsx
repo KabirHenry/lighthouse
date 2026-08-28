@@ -6,7 +6,7 @@ import PlusIcon from '../assets/plus.svg';
 import BackLeftIcon from '../assets/back-left.svg';
 import DustbinIcon from '../assets/dustbin.svg';
 import PencilIcon from '../assets/pencil.svg';
-import RoomIcon from '../assets/room.svg';
+import DrawerIcon from '../assets/drawer.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
@@ -59,7 +59,7 @@ function Locations() {
 								className='bare d-none d-md-block'
 							/>
 							<IconLink
-								src={RoomIcon}
+								src={DrawerIcon}
 								alt={t('homes.delete')}
 								className='bare secondary-list-icon'
 							/>

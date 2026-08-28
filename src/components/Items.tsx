@@ -6,7 +6,7 @@ import PlusIcon from '../assets/plus.svg';
 import BackLeftIcon from '../assets/back-left.svg';
 import DustbinIcon from '../assets/dustbin.svg';
 import PencilIcon from '../assets/pencil.svg';
-import RoomIcon from '../assets/room.svg';
+import ItemIcon from '../assets/item.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
 import LightHousePixel from './LightHousePixel';
@@ -70,7 +70,7 @@ function Items() {
 								className='bare d-none d-md-block'
 							/>
 							<IconLink
-								src={RoomIcon}
+								src={ItemIcon}
 								alt={t('items.delete')}
 								className='bare secondary-list-icon'
 							/>
