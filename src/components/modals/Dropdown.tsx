@@ -14,7 +14,7 @@ import { DividerBar, dropdownStyles, type DropdownOption } from './dropdownStyle
 import './Modal.css';
 
 /**
- * Value of the "create new…" entry appended to the menu. It can never collide
+ * Value of the "create new…" entry that heads the menu. It can never collide
  * with a real option: every id in the app is a number.
  */
 const CREATE = '__create__' as const;
@@ -118,7 +118,7 @@ function Dropdown<T extends string | number>({
 	}
 
 	const menuOptions: DropdownOption<T | typeof CREATE>[] = create
-		? [...options, { value: CREATE, label: create.label, isCreate: true }]
+		? [{ value: CREATE, label: create.label, isCreate: true }, ...options]
 		: options;
 
 	return (
