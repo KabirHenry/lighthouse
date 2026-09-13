@@ -23,8 +23,8 @@ function HomePage() {
 			<Link to="">
 				<Button disabled snippet={t('home.comingSoon')}>{t('pages.reminders')}</Button>
 			</Link>
-			<Link to="">
-				<Button disabled snippet={t('home.comingSoon')}>{t('pages.backup')}</Button>
+			<Link to="/backup">
+				<Button>{t('pages.backup')}</Button>
 			</Link>
 			<Link to="/about">
 				<Button>{t('pages.about')}</Button>

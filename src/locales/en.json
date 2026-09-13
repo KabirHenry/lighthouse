@@ -106,5 +106,18 @@
     "download": "Download",
     "takePhoto": "Take Photo",
     "upload": "Upload Photo"
+  },
+  "backup": {
+    "description": "Save everything in Lighthouse to a file, or bring a saved file back.",
+    "download": "Download Backup",
+    "restore": "Restore Backup",
+    "working": "Working…",
+    "downloaded": "Backup saved ({{size}}).",
+    "restored": "Backup restored.",
+    "downloadFailed": "Couldn't create the backup. Try again.",
+    "unreadable": "That file couldn't be read as a Lighthouse backup.",
+    "restoreFailed": "The restore didn't finish. Your data has not been changed.",
+    "restoreConfirm": "Restoring replaces everything currently in Lighthouse. This cannot be undone.",
+    "fileSummary": "From {{date}}: {{records}} records, {{pictures}} pictures"
   }
 }

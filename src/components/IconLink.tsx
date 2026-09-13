@@ -30,14 +30,24 @@ export function IconLink({
 		alt={alt}
 	/>;
 
-	return <Link to={!disabled ? to : '' } onClick={onClick}>
-		<Button
-			variant="icon"
-			className={className}
-			style={style}
-			disabled={disabled}
-		>
-			{image}
-		</Button>
-	</Link>;
+	const button = <Button
+		variant="icon"
+		className={className}
+		style={style}
+		disabled={disabled}
+		onClick={onClick}
+	>
+		{image}
+	</Button>;
+
+	// With no destination this is a plain action (e.g. a back arrow), so render the button alone.
+	// Wrapping it in a Link would leave an anchor to `''`, which resolves to the current path,
+	// and React Router runs its own navigation after the handlerm, unless the handler prevents
+	// the default. The click would land back on the page it started from, undoing whatever
+	// `onClick` just did.
+	if (!to || disabled) {
+		return button;
+	}
+
+	return <Link to={to}>{button}</Link>;
 }

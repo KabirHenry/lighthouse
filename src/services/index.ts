@@ -6,10 +6,10 @@ import {
 	openDB,
 } from 'idb';
 
-const DB_NAME = 'LightHouseDB';
-const DB_VERSION = 5;
+export const DB_NAME = 'LightHouseDB';
+export const DB_VERSION = 5;
 
-enum Stores {
+export enum Stores {
 	HOMES = 'homes',
 	ROOMS = 'rooms',
 	LOCATIONS = 'locations',
@@ -32,6 +32,9 @@ export async function getHomeService() {
 	const db = await initDB();
 	return new HomeService(db);
 }
+
+/** The database type, exported so the backup module can talk to a raw connection. */
+export type LighthouseDB = IDBPDatabase<LighthouseDBSchema>;
 
 export type HomeID = number & { readonly __brand: 'HomeID' };
 export type PictureID = number & { readonly __brand: 'PictureID' };
@@ -513,20 +516,95 @@ function seedFirstHome(tx: UpgradeTx) {
 	});
 }
 
-async function initDB() {
-	return openDB<LighthouseDBSchema>(DB_NAME, DB_VERSION, {
+/**
+ * The migration ladder. Each step brings a database up from the version before
+ * it to `version`; steps run in ascending order and only the ones the database
+ * hasn't seen yet. Never drop a store that could hold user data — transform it
+ * in place.
+ *
+ * Keeping this as data rather than a chain of `if (oldVersion < n)` blocks lets
+ * a restore replay only the steps up to the version a backup was taken at, so
+ * the file's records land in the schema they were written for and the remaining
+ * steps then migrate them forward exactly as they would for a live database.
+ *
+ * Future schema changes append a step here, e.g. a `{ version: 6, run }` entry
+ * that adds a store, adds an index, or backfills a field.
+ */
+const MIGRATIONS: { version: number; run: (db: LighthouseDB, tx: UpgradeTx) => void }[] = [
+	{ version: 5, run: createInitialSchema },
+];
+
+/** Run every ladder step in `(oldVersion, targetVersion]`. */
+function runMigrations(db: LighthouseDB, tx: UpgradeTx, oldVersion: number, targetVersion: number) {
+	for (const step of MIGRATIONS) {
+		if (oldVersion < step.version && step.version <= targetVersion) {
+			step.run(db, tx);
+		}
+	}
+}
+
+/**
+ * Open the database at a specific version, running the ladder up to it.
+ *
+ * `seed` is off for the intermediate open a restore performs: the backup's own
+ * records are about to be written in, and seeding would insert a "My Home" that
+ * collides with them.
+ */
+export function openDBAtVersion(version: number, { seed = true }: { seed?: boolean } = {}) {
+	return openDB<LighthouseDBSchema>(DB_NAME, version, {
 		upgrade(db, oldVersion, _newVersion, transaction) {
-			// Migration ladder: each block brings a database up from the version
-			// before it. Only run steps the database hasn't seen yet, and never
-			// drop a store that could hold user data — transform it in place.
-			if (oldVersion < 5) {
-				createInitialSchema(db, transaction);
+			runMigrations(db, transaction, oldVersion, version);
+
+			if (seed) {
+				seedFirstHome(transaction);
 			}
-
-			// Future schema changes go here, e.g.:
-			//   if (oldVersion < 6) { /* add store / index / backfill field */ }
-
-			seedFirstHome(transaction);
+		},
+		// Another tab is holding an old version open. Close our connection so its
+		// upgrade (or a restore's delete) can proceed instead of hanging.
+		blocking(_currentVersion, _blockedVersion, event) {
+			(event.target as IDBDatabase | null)?.close();
+			dbPromise = null;
+		},
+		terminated() {
+			dbPromise = null;
 		},
 	});
+}
+
+/**
+ * The app's single shared connection. Memoised so every caller shares one handle
+ * — a restore has to close the database before it can be deleted, and that is
+ * only possible if there is exactly one to close.
+ */
+let dbPromise: Promise<LighthouseDB> | null = null;
+
+function initDB(): Promise<LighthouseDB> {
+	dbPromise ??= openDBAtVersion(DB_VERSION).catch((error: unknown) => {
+		// Don't cache a failed open; the next caller should get a fresh attempt.
+		dbPromise = null;
+		throw error;
+	});
+
+	return dbPromise;
+}
+
+/** The shared connection, opening it if needed. */
+export function getDB(): Promise<LighthouseDB> {
+	return initDB();
+}
+
+/** Close the shared connection, if one is open. Required before deleting the database. */
+export async function closeDB(): Promise<void> {
+	const pending = dbPromise;
+	dbPromise = null;
+
+	if (!pending) {
+		return;
+	}
+
+	try {
+		(await pending).close();
+	} catch {
+		// An open that never succeeded has nothing to close.
+	}
 }

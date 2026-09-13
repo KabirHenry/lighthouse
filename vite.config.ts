@@ -8,6 +8,10 @@ const { version } = createRequire(import.meta.url)('./package.json') as { versio
 
 // https://vite.dev/config/
 export default defineConfig({
+	// Surfaced in backup files so a restore can report which build wrote them.
+	define: {
+		__APP_VERSION__: JSON.stringify(version),
+	},
 	plugins: [
 		react(),
 		VitePWA({

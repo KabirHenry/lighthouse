@@ -1,0 +1,32 @@
+.backup {
+  gap: 28px;
+  text-align: center;
+}
+
+.backup-description {
+  margin: 0;
+  font-size: 24px;
+  max-width: 22ch;
+}
+
+.backup-actions {
+  gap: 14px;
+}
+
+/* The picker is driven by the Restore button, so the native control stays out
+   of the layout rather than being styled to match it. */
+.backup-input {
+  display: none;
+}
+
+.backup-status {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.6;
+  max-width: 30ch;
+}
+
+.backup-status.error {
+  color: var(--colour-cancel);
+  opacity: 1;
+}
