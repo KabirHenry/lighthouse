@@ -9,6 +9,7 @@ import usePWAContext from '../hooks/usePWAContext';
 import { isStandalone } from '../utils/pwa';
 import Button from './Button';
 import './About.css';
+import { REPO_URL } from '../constants';
 
 function About() {
 	const { t } = useTranslation();
@@ -58,6 +59,7 @@ function About() {
 					)}
 				</div>
 			)}
+			<a href={REPO_URL} target='_blank'><Button type='button'>GitHub</Button></a>
 		</div>
 	</>;
 }

@@ -33,3 +33,5 @@ export enum TourTarget {
 export function tourSelector(target: TourTarget): string {
 	return `[data-tour="${target}"]`;
 }
+
+export const REPO_URL = 'https://github.com/KabirHenry/lighthouse';
