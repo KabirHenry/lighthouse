@@ -103,10 +103,10 @@
   "picture": {
     "prompt": "Tap below to update {{name}}'s picture:",
     "editHint": "To update {{name}}'s picture, tap its icon in the list.",
-    "update": "Update",
     "download": "Download",
-    "takePhoto": "Take Photo",
-    "upload": "Upload Photo"
+    "upload": "Upload",
+    "capture": "Capture",
+    "save": "Save"
   },
   "backup": {
     "description": "Save everything in Lighthouse to a file, or bring a saved file back.",

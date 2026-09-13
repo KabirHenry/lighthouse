@@ -211,7 +211,7 @@ function PictureModal({ type }: { type: PictureOwnerType }) {
 				{canCapture && (
 					<div className='picture-sources d-flex flex-row justify-content-between w-100'>
 						<Button type='button' className='muted' onClick={() => cameraInputRef.current?.click()}>
-							{t('picture.takePhoto')}
+							{t('picture.capture')}
 						</Button>
 						<Button type='button' className='muted' onClick={() => inputRef.current?.click()}>
 							{t('picture.upload')}
@@ -229,7 +229,7 @@ function PictureModal({ type }: { type: PictureOwnerType }) {
 					</div>
 					<div className='d-flex flex-row justify-content-between w-100'>
 						<Button type='button' className='confirm' disabled={!hasPendingChange} onClick={handleUpdate}>
-							{t('picture.update')}
+							{t('picture.save')}
 						</Button>
 						<Button type='button' className='cancel' onClick={close}>
 							{t('cancel')}
