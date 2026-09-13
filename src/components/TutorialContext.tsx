@@ -9,6 +9,11 @@ import TutorialStateContext, {
 } from '../context/tutorialContext';
 import { resetDemoStore, seedDemoStore } from '../services/demo';
 
+// Where the router says we are in the session history. See also `useSmartBack`.
+function historyIndex(): number | undefined {
+	return (window.history.state as { idx?: number } | null)?.idx;
+}
+
 /**
  * Owns the demo/real store toggle for the guided tour.
  *
@@ -27,12 +32,18 @@ function TutorialProvider({ children }: { children: React.ReactNode }) {
 	// concurrent seeds would leave the demo home duplicated.
 	const isStartingRef = useRef(false);
 
+	// The history entry the tour started from. Everything above it on the stack
+	// belongs to the tour — its hands-on steps have the user tap real links, which
+	// push — and `endTutorial` rewinds to it so none of that outlives the tour.
+	const entryIndexRef = useRef<number | undefined>(undefined);
+
 	const startTutorial = useCallback(async () => {
 		if (isStartingRef.current) {
 			return;
 		}
 
 		isStartingRef.current = true;
+		entryIndexRef.current = historyIndex();
 		setStatus(TutorialStatus.STARTING);
 
 		try {
@@ -47,14 +58,30 @@ function TutorialProvider({ children }: { children: React.ReactNode }) {
 			isStartingRef.current = false;
 		}
 
-		void navigate('/');
+		// Replace, so the `/tutorial` entry itself becomes home. Left on the stack,
+		// Back would eventually land on it and start the whole tour over again.
+		void navigate('/', { replace: true });
 	}, [t, navigate]);
 
 	const endTutorial = useCallback(async () => {
 		// Flip first. `HomesProvider` swaps back to the real store on this render,
 		// so the wipe below lands on a database nothing is reading any more.
 		setStatus(TutorialStatus.OFF);
-		void navigate('/');
+
+		// Rewind past every entry the tour added, back to the one it started from —
+		// which `startTutorial` left pointing at home. Otherwise Back walks the user
+		// through the tour's pages again, this time on their real data.
+		//
+		// Only ever backwards: `navigate(0)` is `history.go(0)`, a full reload. If
+		// the user has already stepped back to (or past) where the tour began, there
+		// is nothing left to unwind, so just make sure they end up home.
+		const entry = entryIndexRef.current;
+		const current = historyIndex();
+		if (entry !== undefined && current !== undefined && entry < current) {
+			void navigate(entry - current);
+		} else {
+			void navigate('/', { replace: true });
+		}
 
 		await resetDemoStore();
 	}, [navigate]);

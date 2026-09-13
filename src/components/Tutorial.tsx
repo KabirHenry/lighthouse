@@ -1,6 +1,12 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, type NavigateFunction } from 'react-router';
+import {
+	NavigationType,
+	useLocation,
+	useNavigate,
+	useNavigationType,
+	type NavigateFunction,
+} from 'react-router';
 import {
 	EVENTS,
 	LIFECYCLE,
@@ -176,8 +182,8 @@ function wait(ms: number): Promise<void> {
  */
 function goTo(navigate: NavigateFunction, path: string, filled?: TourTarget) {
 	return async () => {
-		// `replace`, so that a dozen tour navigations don't leave the user having to
-		// walk back through the whole tour to escape the app.
+		// `replace`, so the tour's own navigations don't stack up. The user's taps on
+		// hands-on steps still push; `endTutorial` unwinds those.
 		void navigate(path, { replace: true });
 
 		const deadline = Date.now() + SETTLE_TIMEOUT_MS;
@@ -207,7 +213,8 @@ function goTo(navigate: NavigateFunction, path: string, filled?: TourTarget) {
 function Tutorial() {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
-	const { pathname } = useLocation();
+	const location = useLocation();
+	const navigationType = useNavigationType();
 	const { status, endTutorial } = useTutorialContext();
 	const { isLoaded, home, homes, rooms, locations, allItems } = useHomesContext();
 
@@ -412,10 +419,33 @@ function Tutorial() {
 		}
 
 		const { awaitPath } = (steps[state.index]?.data ?? {}) as StepData;
-		if (awaitPath !== undefined && awaitPath.test(pathname)) {
+		if (awaitPath !== undefined && awaitPath.test(location.pathname)) {
 			controls.next();
 		}
-	}, [controls, pathname, state.index, state.lifecycle, state.status, steps]);
+	}, [controls, location.pathname, state.index, state.lifecycle, state.status, steps]);
+
+	// End the tour on a Back or Forward it didn't make itself.
+	//
+	// Every step assumes the page its `before` put there. A browser Back pulls
+	// that page out from under the step on screen: Joyride either strands the
+	// tooltip over a page it doesn't describe, with the overlay still swallowing
+	// every tap, or hides it and leaves the user on demo data with nothing to
+	// dismiss. Ending is the only coherent state, and it lands them home, which
+	// is roughly where Back was taking them anyway.
+	//
+	// Keyed on the location actually changing, not on the navigation type alone:
+	// the type is sticky, and loading `/tutorial` directly leaves it at POP until
+	// the next navigation, which would end the tour the moment it began.
+	// `endTutorial`'s own rewind is a POP as well, but the tour has stopped by then.
+	const lastLocationKeyRef = useRef(location.key);
+	useEffect(() => {
+		const isNewLocation = location.key !== lastLocationKeyRef.current;
+		lastLocationKeyRef.current = location.key;
+
+		if (isRunning && isNewLocation && navigationType === NavigationType.Pop) {
+			void endTutorial();
+		}
+	}, [endTutorial, isRunning, location.key, navigationType]);
 
 	return isReady ? Tour : null;
 }

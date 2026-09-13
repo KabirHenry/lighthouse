@@ -27,7 +27,8 @@ function HomePage() {
 			<Link to="/backup">
 				<Button dataTour={TourTarget.HOME_BACKUP}>{t('pages.backup')}</Button>
 			</Link>
-			<Link to="/tutorial">
+			{/* `replace`: the tour starts and ends on this page, and shouldn't leave an entry behind. */}
+			<Link to="/tutorial" replace>
 				<Button dataTour={TourTarget.HOME_TUTORIAL}>{t('pages.tutorial')}</Button>
 			</Link>
 			<Link to="/about">
