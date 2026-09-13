@@ -11,7 +11,7 @@ import Button from './Button';
 import { IconLink } from './IconLink';
 import { SecondaryListPicture } from './SecondaryListPicture';
 import LightHousePixel from './LightHousePixel';
-import { SEPARATOR } from '../constants';
+import { SEPARATOR, TourTarget } from '../constants';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 import type { RoomID } from '../services';
@@ -48,7 +48,10 @@ function Locations() {
 				{room?.name}{SEPARATOR}{home?.name}
 			</div>
 		</h1>
-		<div className="main-buttons secondary-list main-list d-flex flex-column align-items-center">
+		<div
+			className="main-buttons secondary-list main-list d-flex flex-column align-items-center"
+			data-tour={TourTarget.LOCATIONS_LIST}
+		>
 			{
 				locations.map(({ location, itemCount }) => (
 					<div className="main-list-item" key={location.id}>

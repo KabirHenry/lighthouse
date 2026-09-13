@@ -10,6 +10,7 @@ import Button from './Button';
 import { IconLink } from './IconLink';
 import { SecondaryListPicture } from './SecondaryListPicture';
 import LightHousePixel from './LightHousePixel';
+import { TourTarget } from '../constants';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 
@@ -38,7 +39,10 @@ function Rooms() {
 				{activeHome?.name}
 			</div>
 		</h1>
-		<div className="main-buttons secondary-list main-list d-flex flex-column align-items-center">
+		<div
+			className="main-buttons secondary-list main-list d-flex flex-column align-items-center"
+			data-tour={TourTarget.ROOMS_LIST}
+		>
 			{
 				rooms.map(({ room, locationCount, itemCount }) => (
 					<div className="main-list-item" key={room.id}>

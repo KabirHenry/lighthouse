@@ -11,7 +11,7 @@ import ItemIcon from '../assets/item.svg';
 import Button from './Button';
 import { IconLink } from './IconLink';
 import { SecondaryListPicture } from './SecondaryListPicture';
-import { SEPARATOR } from '../constants';
+import { SEPARATOR, TourTarget } from '../constants';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 import { parseIDList } from '../utils/params';
@@ -96,17 +96,32 @@ function Items() {
 		</div>
 		<h1 className="main-title">
 			<div className='main-title-actions-before'>
-				<IconLink to={`/items/filter${filterQuery}`} src={SortFilterIcon} alt={t('items.sortFilter')} scale='70%' />
+				<IconLink
+					to={`/items/filter${filterQuery}`}
+					src={SortFilterIcon}
+					alt={t('items.sortFilter')}
+					scale='70%'
+					dataTour={TourTarget.ITEMS_FILTER}
+				/>
 			</div>
 			<span className="main-title-text">{t('pages.items')}</span>
 			<div className="main-title-actions-after">
-				<IconLink to={`/items/new${query}`} src={PlusIcon} alt={t('items.add')} scale='65%' />
+				<IconLink
+					to={`/items/new${query}`}
+					src={PlusIcon}
+					alt={t('items.add')}
+					scale='65%'
+					dataTour={TourTarget.ITEMS_ADD}
+				/>
 			</div>
 			<div className="subheading">
 				{home?.name}
 			</div>
 		</h1>
-		<div className="main-buttons secondary-list main-list d-flex flex-column align-items-center">
+		<div
+			className="main-buttons secondary-list main-list d-flex flex-column align-items-center"
+			data-tour={TourTarget.ITEMS_LIST}
+		>
 			{
 				scoped.map(({ item, location, room }) => (
 					<div className="main-list-item" key={item.id}>

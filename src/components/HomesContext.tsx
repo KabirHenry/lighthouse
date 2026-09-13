@@ -2,6 +2,8 @@ import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
 import HomesStateContext, { type HomesContextValue } from '../context/homesStateContext';
+import useTutorialContext from '../hooks/useTutorialContext';
+import { getDemoHomeService } from '../services/demo';
 import {
 	getHomeService,
 	type Home,
@@ -18,7 +20,18 @@ import {
 	type RoomInfo,
 } from '../services';
 
+/**
+ * Everything below belongs to exactly one database, so the tutorial's swap
+ * between the real store and the demo one is a remount rather than a reset.
+ * The key change throws the old state away wholesale, and no stale row can
+ * be on screen for the tick it takes the other database to open.
+ */
 function HomesProvider({ children }: { children: React.ReactNode }) {
+	const { isDemo } = useTutorialContext();
+	return <HomesStore key={String(isDemo)} isDemo={isDemo}>{children}</HomesStore>;
+}
+
+function HomesStore({ isDemo, children }: { isDemo: boolean; children: React.ReactNode }) {
 	const [homeService, setHomeService] = useState<HomeService | null>(null);
 	const [home, setHome] = useState<Home | null>(null);
 	const [homes, setHomes] = useState<Home[]>([]);
@@ -272,7 +285,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		let isCancelled = false;
 
 		const loadHomes = async () => {
-			const service = await getHomeService();
+			const service = await (isDemo ? getDemoHomeService() : getHomeService());
 			if (isCancelled) {
 				return;
 			}
@@ -293,7 +306,7 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		return () => {
 			isCancelled = true;
 		};
-	}, []);
+	}, [isDemo]);
 
 	useEffect(() => {
 		let isCancelled = false;

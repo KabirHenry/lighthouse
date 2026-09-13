@@ -11,6 +11,7 @@ export function IconLink({
 	style,
 	onClick,
 	scale = '100%',
+	dataTour,
 }: {
 	to?: string;
 	src: string;
@@ -20,6 +21,8 @@ export function IconLink({
 	style?: React.CSSProperties;
 	onClick?: () => void,
 	scale?: string;
+	/** Tags this link as a guided-tour target. See `TourTarget` in `constants.ts`. */
+	dataTour?: string;
 }) {
 	const image = <img
 		style={{
@@ -36,6 +39,7 @@ export function IconLink({
 		style={style}
 		disabled={disabled}
 		onClick={onClick}
+		dataTour={dataTour}
 	>
 		{image}
 	</Button>;

@@ -37,7 +37,8 @@
     "locations": "Locations",
     "reminders": "Reminders",
     "backup": "Backup",
-    "homes": "Homes"
+    "homes": "Homes",
+    "tutorial": "Tutorial"
   },
   "errors": {
     "notFound": {
@@ -119,5 +120,85 @@
     "restoreFailed": "The restore didn't finish. Your data has not been changed.",
     "restoreConfirm": "Restoring replaces everything currently in Lighthouse. This cannot be undone.",
     "fileSummary": "From {{date}}: {{records}} records, {{pictures}} pictures"
+  },
+  "tutorial": {
+    "loading": "Setting up the demo…",
+    "demo": {
+      "home": "Demo Home",
+      "rooms": {
+        "kitchen": "Kitchen",
+        "bedroom": "Bedroom",
+        "garage": "Garage"
+      },
+      "locations": {
+        "topDrawer": "Top Drawer",
+        "pantryShelf": "Pantry Shelf",
+        "nightstand": "Nightstand",
+        "wardrobe": "Wardrobe",
+        "toolBox": "Tool Box"
+      },
+      "items": {
+        "scissors": "Scissors",
+        "measuringTape": "Measuring Tape",
+        "oliveOil": "Olive Oil",
+        "coffeeBeans": "Coffee Beans",
+        "readingGlasses": "Reading Glasses",
+        "passport": "Passport",
+        "winterCoat": "Winter Coat",
+        "screwdriverSet": "Screwdriver Set",
+        "sparePhoneCharger": "Spare Phone Charger"
+      }
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "nextWithProgress": "Next ({current}/{total})",
+      "last": "Finish",
+      "close": "Exit tutorial",
+      "skip": "Exit",
+      "open": "Open the tutorial step"
+    },
+    "steps": {
+      "welcome": {
+        "title": "Welcome aboard",
+        "content": "A quick demo tour of Lighthouse, an app that enables you to manage inventories of your items, rooms, and locations."
+      },
+      "items": {
+        "title": "Items",
+        "content": "Everything you own lives here: One flat list of every item, across every room."
+      },
+      "itemsList": {
+        "title": "Everything, in one place",
+        "content": "Each entry shows what the thing is, and underneath it, the location and room where you'll find it."
+      },
+      "itemsFilter": {
+        "title": "Search and filter",
+        "content": "Looking for one thing in particular? Search by name, or narrow the list down to certain rooms and locations."
+      },
+      "itemsAdd": {
+        "title": "Add an item",
+        "content": "Add something new here. You can choose the room and location for it, or create them if they don't exist yet."
+      },
+      "rooms": {
+        "title": "Rooms",
+        "content": "Items are organised by room, and then by a location inside that room. Let's look at the rooms."
+      },
+      "roomsList": {
+        "title": "Your rooms",
+        "content": "Each room shows how many locations and items it holds. Tapping a room's name opens what's inside it."
+      },
+      "locationsList": {
+        "title": "Locations",
+        "content": "Locations are the specific spots within a room – a drawer, a shelf, a box. This is where items actually sit."
+      },
+      "backup": {
+        "title": "Backup",
+        "content": "Lighthouse keeps everything on your device and nowhere else. Save it all to a file here, and bring it back on another one."
+      },
+      "finish": {
+        "title": "That's the tour",
+        "content": "You'll be back to the home page now. Enjoy Lighthouse!"
+      }
+    }
   }
 }

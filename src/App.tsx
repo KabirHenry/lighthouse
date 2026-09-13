@@ -5,6 +5,9 @@ import './App.css';
 
 import HomesProvider from './components/HomesContext';
 import PWAProvider from './components/PWAContext';
+import TutorialProvider from './components/TutorialContext';
+import Tutorial from './components/Tutorial';
+import TutorialEntry from './components/TutorialEntry';
 import Homes from './components/Homes';
 import AddHome from './components/modals/AddHome';
 import EditHome from './components/modals/EditHome';
@@ -34,43 +37,47 @@ import InstallPrompt from './components/modals/InstallPrompt';
 function App() {
 	return (
 		<PWAProvider>
-			<HomesProvider>
-				<Container as={'main'} className="d-flex flex-column align-items-center">
-					<Routes>
-						<Route path="/" element={<HomePage />} />
-						<Route path="/items" element={<Items/>}>
-							<Route path="filter" element={<FilterItems/>} />
-							<Route path="new" element={<AddItem/>} />
-							<Route path=":id" element={<EditItem/>} />
-							<Route path=":id/delete" element={<DeleteItem/>} />
-							<Route path=":id/upload" element={<PictureModal type="item"/>} />
-						</Route>
-						<Route path="/rooms" element={<Rooms/>}>
-							<Route path="new" element={<AddRoom/>} />
-							<Route path=":id" element={<EditRoom/>} />
-							<Route path=":id/delete" element={<DeleteRoom/>} />
-							<Route path=":id/upload" element={<PictureModal type="room"/>} />
-						</Route>
-						<Route path="/locations" element={<Locations/>}>
-							<Route path="new" element={<AddLocation/>} />
-							<Route path=":id" element={<EditLocation/>} />
-							<Route path=":id/delete" element={<DeleteLocation/>} />
-							<Route path=":id/upload" element={<PictureModal type="location"/>} />
-						</Route>
-						<Route path="/reminders" element={<Reminders/>} />
-						<Route path="/backup" element={<Backup/>} />
-						<Route path="/about" element={<About/>} />
-						<Route path="/homes" element={<Homes/>}>
-							<Route path="new" element={<AddHome/>} />
-							<Route path=":id" element={<EditHome/>} />
-							<Route path=":id/delete" element={<DeleteHome/>} />
-						</Route>
-						<Route path="*" element={<NotFound />} />
-					</Routes>
-				</Container>
-				<PWAPrompt />
-				<InstallPrompt />
-			</HomesProvider>
+			<TutorialProvider>
+				<HomesProvider>
+					<Container as={'main'} className="d-flex flex-column align-items-center">
+						<Routes>
+							<Route path="/" element={<HomePage />} />
+							<Route path="/items" element={<Items/>}>
+								<Route path="filter" element={<FilterItems/>} />
+								<Route path="new" element={<AddItem/>} />
+								<Route path=":id" element={<EditItem/>} />
+								<Route path=":id/delete" element={<DeleteItem/>} />
+								<Route path=":id/upload" element={<PictureModal type="item"/>} />
+							</Route>
+							<Route path="/rooms" element={<Rooms/>}>
+								<Route path="new" element={<AddRoom/>} />
+								<Route path=":id" element={<EditRoom/>} />
+								<Route path=":id/delete" element={<DeleteRoom/>} />
+								<Route path=":id/upload" element={<PictureModal type="room"/>} />
+							</Route>
+							<Route path="/locations" element={<Locations/>}>
+								<Route path="new" element={<AddLocation/>} />
+								<Route path=":id" element={<EditLocation/>} />
+								<Route path=":id/delete" element={<DeleteLocation/>} />
+								<Route path=":id/upload" element={<PictureModal type="location"/>} />
+							</Route>
+							<Route path="/reminders" element={<Reminders/>} />
+							<Route path="/backup" element={<Backup/>} />
+							<Route path="/tutorial" element={<TutorialEntry/>} />
+							<Route path="/about" element={<About/>} />
+							<Route path="/homes" element={<Homes/>}>
+								<Route path="new" element={<AddHome/>} />
+								<Route path=":id" element={<EditHome/>} />
+								<Route path=":id/delete" element={<DeleteHome/>} />
+							</Route>
+							<Route path="*" element={<NotFound />} />
+						</Routes>
+					</Container>
+					<Tutorial />
+					<PWAPrompt />
+					<InstallPrompt />
+				</HomesProvider>
+			</TutorialProvider>
 		</PWAProvider>
 	);
 }

@@ -6,6 +6,7 @@ function Button({
 	className,
 	style,
 	snippet,
+	dataTour,
 	children
 }: {
 	variant?: 'icon' | 'text',
@@ -15,6 +16,8 @@ function Button({
 	className?: string,
 	style?: React.CSSProperties,
 	snippet?: React.ReactNode,
+	/** Tags this button as a guided-tour target. See `TourTarget` in `constants.ts`. */
+	dataTour?: string,
 	children: React.ReactNode
 }) {
 	const classes = ['btn', `btn-${variant}`, snippet ? 'btn-snippet-host' : '', className].filter(Boolean).join(' ');
@@ -24,6 +27,7 @@ function Button({
 		style={style}
 		disabled={disabled}
 		onClick={onClick}
+		data-tour={dataTour}
 	>
 		{children}
 		{snippet && <span className="btn-snippet">{snippet}</span>}

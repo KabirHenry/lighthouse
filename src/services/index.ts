@@ -28,8 +28,22 @@ const PICTURE_OWNER_STORES: Record<PictureOwnerType, Stores> = {
 	item: Stores.ITEMS,
 };
 
-export async function getHomeService() {
-	const db = await initDB();
+/** Which database to talk to, and whether a brand-new one gets the starter home. */
+export type DBOptions = {
+	/**
+	 * The database name. The tutorial passes its own so that nothing it writes can
+	 * reach the real store.
+	 */
+	name?: string;
+	/**
+	 * Seed a brand-new database with the starter home. Off for a restore and for
+	 * the tutorial, both of which write their own rows in straight afterwards.
+	 */
+	seed?: boolean;
+};
+
+export async function getHomeService(options?: DBOptions) {
+	const db = await initDB(options);
 	return new HomeService(db);
 }
 
@@ -544,14 +558,25 @@ function runMigrations(db: LighthouseDB, tx: UpgradeTx, oldVersion: number, targ
 }
 
 /**
- * Open the database at a specific version, running the ladder up to it.
+ * One shared connection per database name. Memoised so every caller shares one
+ * handle — a restore has to close the database before it can be deleted, and
+ * that is only possible if there is exactly one to close.
+ *
+ * Keyed by name rather than held in a single variable because the tutorial runs
+ * against a second database alongside the real one, and a `blocking` event on
+ * either must only forget that one.
+ */
+const connections = new Map<string, Promise<LighthouseDB>>();
+
+/**
+ * Open a database at a specific version, running the ladder up to it.
  *
  * `seed` is off for the intermediate open a restore performs: the backup's own
  * records are about to be written in, and seeding would insert a "My Home" that
  * collides with them.
  */
-export function openDBAtVersion(version: number, { seed = true }: { seed?: boolean } = {}) {
-	return openDB<LighthouseDBSchema>(DB_NAME, version, {
+export function openDBAtVersion(version: number, { seed = true, name = DB_NAME }: DBOptions = {}) {
+	return openDB<LighthouseDBSchema>(name, version, {
 		upgrade(db, oldVersion, _newVersion, transaction) {
 			runMigrations(db, transaction, oldVersion, version);
 
@@ -563,40 +588,39 @@ export function openDBAtVersion(version: number, { seed = true }: { seed?: boole
 		// upgrade (or a restore's delete) can proceed instead of hanging.
 		blocking(_currentVersion, _blockedVersion, event) {
 			(event.target as IDBDatabase | null)?.close();
-			dbPromise = null;
+			connections.delete(name);
 		},
 		terminated() {
-			dbPromise = null;
+			connections.delete(name);
 		},
 	});
 }
 
-/**
- * The app's single shared connection. Memoised so every caller shares one handle
- * — a restore has to close the database before it can be deleted, and that is
- * only possible if there is exactly one to close.
- */
-let dbPromise: Promise<LighthouseDB> | null = null;
+function initDB({ name = DB_NAME, seed = true }: DBOptions = {}): Promise<LighthouseDB> {
+	const existing = connections.get(name);
+	if (existing) {
+		return existing;
+	}
 
-function initDB(): Promise<LighthouseDB> {
-	dbPromise ??= openDBAtVersion(DB_VERSION).catch((error: unknown) => {
+	const pending = openDBAtVersion(DB_VERSION, { name, seed }).catch((error: unknown) => {
 		// Don't cache a failed open; the next caller should get a fresh attempt.
-		dbPromise = null;
+		connections.delete(name);
 		throw error;
 	});
 
-	return dbPromise;
+	connections.set(name, pending);
+	return pending;
 }
 
-/** The shared connection, opening it if needed. */
-export function getDB(): Promise<LighthouseDB> {
-	return initDB();
+/** A shared connection, opening it if needed. */
+export function getDB(options?: DBOptions): Promise<LighthouseDB> {
+	return initDB(options);
 }
 
-/** Close the shared connection, if one is open. Required before deleting the database. */
-export async function closeDB(): Promise<void> {
-	const pending = dbPromise;
-	dbPromise = null;
+/** Close a shared connection, if one is open. Required before deleting the database. */
+export async function closeDB(name: string = DB_NAME): Promise<void> {
+	const pending = connections.get(name);
+	connections.delete(name);
 
 	if (!pending) {
 		return;

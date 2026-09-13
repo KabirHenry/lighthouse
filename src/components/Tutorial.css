@@ -1,0 +1,21 @@
+:root {
+  /*
+   * Lifted just off the page black so the tour's tooltip reads as a panel
+   * sitting on the overlay rather than a hole punched through it. Mirrored by
+   * ARROW_COLOUR in Tutorial.tsx, which Joyride needs as a literal.
+   */
+  --colour-tutorial-bg: #14161c;
+}
+
+/* The tour renders into a portal on <body>, outside <main>, so it inherits the
+   body font but none of the app's layout. Nudge it back into the house style. */
+#react-joyride-portal,
+.react-joyride__tooltip {
+  font-family: Silkscreen, "Courier New", Courier, monospace;
+}
+
+/* Silkscreen has no lowercase descenders to speak of and reads tightly at small
+   sizes; a little letter-spacing keeps the tour's longer sentences legible. */
+.react-joyride__tooltip {
+  letter-spacing: 0.3px;
+}
