@@ -124,18 +124,23 @@
   "tutorial": {
     "loading": "Setting up the demo…",
     "demo": {
-      "home": "Demo Home",
+      "homes": {
+        "main": "Demo Home",
+        "cottage": "Beach House"
+      },
       "rooms": {
         "kitchen": "Kitchen",
         "bedroom": "Bedroom",
-        "garage": "Garage"
+        "garage": "Garage",
+        "shed": "Garden Shed"
       },
       "locations": {
         "topDrawer": "Top Drawer",
         "pantryShelf": "Pantry Shelf",
         "nightstand": "Nightstand",
         "wardrobe": "Wardrobe",
-        "toolBox": "Tool Box"
+        "toolBox": "Tool Box",
+        "pottingBench": "Potting Bench"
       },
       "items": {
         "scissors": "Scissors",
@@ -146,7 +151,9 @@
         "passport": "Passport",
         "winterCoat": "Winter Coat",
         "screwdriverSet": "Screwdriver Set",
-        "sparePhoneCharger": "Spare Phone Charger"
+        "sparePhoneCharger": "Spare Phone Charger",
+        "wateringCan": "Watering Can",
+        "seedPackets": "Seed Packets"
       }
     },
     "buttons": {
@@ -163,6 +170,18 @@
         "title": "Welcome aboard",
         "content": "A quick demo tour of Lighthouse, an app that enables you to manage inventories of your items, rooms, and locations."
       },
+      "homes": {
+        "title": "More than one home",
+        "content": "Lighthouse can keep track of several places at once – a house, an apartment, a desk at work. Tap the home icon to see yours."
+      },
+      "homesList": {
+        "title": "Switching homes",
+        "content": "You're in {{current}} – the one with the 🏠 beside it. Tap {{other}} to switch everything, items and rooms and locations, across to that home."
+      },
+      "homesSwitched": {
+        "title": "Switched over",
+        "content": "{{name}} has the 🏠 now. Every item, room and location from here on belongs to it."
+      },
       "items": {
         "title": "Items",
         "content": "Everything you own lives here: One flat list of every item, across every room."
@@ -171,11 +190,27 @@
         "title": "Everything, in one place",
         "content": "Each entry shows what the thing is, and underneath it, the location and room where you'll find it."
       },
+      "itemPicture": {
+        "title": "Add a picture",
+        "content": "Items, rooms and locations can all carry a photo. Tap the icon beside {{name}} to give it one."
+      },
+      "pictureModal": {
+        "title": "Its picture",
+        "content": "Take a photo or pick one from your library. Rooms and locations work the same way."
+      },
       "itemsFilter": {
+        "title": "Search and filter",
+        "content": "Tap the sort and filter icon to narrow this list down."
+      },
+      "filterModal": {
         "title": "Search and filter",
         "content": "Looking for one thing in particular? Search by name, or narrow the list down to certain rooms and locations."
       },
       "itemsAdd": {
+        "title": "Add an item",
+        "content": "Tap the plus to put something new into this home."
+      },
+      "addModal": {
         "title": "Add an item",
         "content": "Add something new here. You can choose the room and location for it, or create them if they don't exist yet."
       },
@@ -185,11 +220,15 @@
       },
       "roomsList": {
         "title": "Your rooms",
-        "content": "Each room shows how many locations and items it holds. Tapping a room's name opens what's inside it."
+        "content": "Each room shows how many locations and items it holds. Tap {{name}} to see inside it."
       },
       "locationsList": {
         "title": "Locations",
-        "content": "Locations are the specific spots within a room – a drawer, a shelf, a box. This is where items actually sit."
+        "content": "Locations are the specific spots within a room – a drawer, a shelf, a box. Tap {{name}} to see what's sitting in it."
+      },
+      "locationItems": {
+        "title": "What's in there",
+        "content": "Just the items in {{name}}, rather than the whole home. Every location opens like this."
       },
       "backup": {
         "title": "Backup",

@@ -11,7 +11,7 @@ function HomePage() {
 	const { t } = useTranslation();
 	return <>
 		<div className="align-self-end">
-			<IconLink to="/homes" src={HomeIcon} alt={t('home.home')} />
+			<IconLink to="/homes" src={HomeIcon} alt={t('home.home')} dataTour={TourTarget.HOME_HOMES} />
 		</div>
 		<h1>{titleWithBeacon(t('home.title'))}</h1>
 		<div className="main-buttons d-flex flex-column align-items-center">

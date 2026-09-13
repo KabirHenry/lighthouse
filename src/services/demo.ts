@@ -3,6 +3,7 @@ import {
 	getDB,
 	getHomeService,
 	type DBOptions,
+	type HomeID,
 	type HomeService,
 } from './index';
 
@@ -24,63 +25,96 @@ type Translate = (key: string) => string;
 
 type DemoLocation = { nameKey: string; itemKeys: string[] };
 type DemoRoom = { nameKey: string; locations: DemoLocation[] };
-
-const DEMO_HOME_KEY = 'tutorial.demo.home';
+type DemoHome = { nameKey: string; rooms: DemoRoom[] };
 
 /**
- * What the tour walks through. Enough rooms to fill the Rooms page, more than
- * one location under the first of them for the Locations step, and enough items
- * spread across both that searching and filtering have something to bite on.
+ * What the tour walks through.
+ *
+ * Two homes, because the opening step is about switching between them and a
+ * one-entry list has nothing to demonstrate. The first is the active one and
+ * carries the rooms the rest of the tour visits: enough to fill the Rooms page,
+ * more than one location under the first of them for the Locations step, and
+ * enough items spread across both that searching and filtering have something to
+ * bite on. The second only has to look plausible in the list.
  */
-const DEMO_ROOMS: DemoRoom[] = [
-	{
-		nameKey: 'tutorial.demo.rooms.kitchen',
-		locations: [
-			{
-				nameKey: 'tutorial.demo.locations.topDrawer',
-				itemKeys: [
-					'tutorial.demo.items.scissors',
-					'tutorial.demo.items.measuringTape',
-				],
-			},
-			{
-				nameKey: 'tutorial.demo.locations.pantryShelf',
-				itemKeys: [
-					'tutorial.demo.items.oliveOil',
-					'tutorial.demo.items.coffeeBeans',
-				],
-			},
-		],
-	},
-	{
-		nameKey: 'tutorial.demo.rooms.bedroom',
-		locations: [
-			{
-				nameKey: 'tutorial.demo.locations.nightstand',
-				itemKeys: [
-					'tutorial.demo.items.readingGlasses',
-					'tutorial.demo.items.passport',
-				],
-			},
-			{
-				nameKey: 'tutorial.demo.locations.wardrobe',
-				itemKeys: ['tutorial.demo.items.winterCoat'],
-			},
-		],
-	},
-	{
-		nameKey: 'tutorial.demo.rooms.garage',
-		locations: [
-			{
-				nameKey: 'tutorial.demo.locations.toolBox',
-				itemKeys: [
-					'tutorial.demo.items.screwdriverSet',
-					'tutorial.demo.items.sparePhoneCharger',
-				],
-			},
-		],
-	},
-];
+/**
+ * The home the tour opens in.
+ *
+ * Deliberately the sparse one. The Homes step asks the user to switch, and
+ * switching *into* the well-stocked home means every later step has something to
+ * show; the other way round would leave the rest of the tour touring an almost
+ * empty house.
+ */
+const DEMO_ACTIVE_HOME_KEY = 'tutorial.demo.homes.cottage';
+
+const DEMO_HOMES: DemoHome[] = [{
+	nameKey: 'tutorial.demo.homes.main',
+	rooms: [
+		{
+			nameKey: 'tutorial.demo.rooms.kitchen',
+			locations: [
+				{
+					nameKey: 'tutorial.demo.locations.topDrawer',
+					itemKeys: [
+						'tutorial.demo.items.scissors',
+						'tutorial.demo.items.measuringTape',
+					],
+				},
+				{
+					nameKey: 'tutorial.demo.locations.pantryShelf',
+					itemKeys: [
+						'tutorial.demo.items.oliveOil',
+						'tutorial.demo.items.coffeeBeans',
+					],
+				},
+			],
+		},
+		{
+			nameKey: 'tutorial.demo.rooms.bedroom',
+			locations: [
+				{
+					nameKey: 'tutorial.demo.locations.nightstand',
+					itemKeys: [
+						'tutorial.demo.items.readingGlasses',
+						'tutorial.demo.items.passport',
+					],
+				},
+				{
+					nameKey: 'tutorial.demo.locations.wardrobe',
+					itemKeys: ['tutorial.demo.items.winterCoat'],
+				},
+			],
+		},
+		{
+			nameKey: 'tutorial.demo.rooms.garage',
+			locations: [
+				{
+					nameKey: 'tutorial.demo.locations.toolBox',
+					itemKeys: [
+						'tutorial.demo.items.screwdriverSet',
+						'tutorial.demo.items.sparePhoneCharger',
+					],
+				},
+			],
+		},
+	],
+}, {
+	nameKey: 'tutorial.demo.homes.cottage',
+	rooms: [
+		{
+			nameKey: 'tutorial.demo.rooms.shed',
+			locations: [
+				{
+					nameKey: 'tutorial.demo.locations.pottingBench',
+					itemKeys: [
+						'tutorial.demo.items.wateringCan',
+						'tutorial.demo.items.seedPackets',
+					],
+				},
+			],
+		},
+	],
+}];
 
 /** A `HomeService` bound to the demo database instead of the real one. */
 export function getDemoHomeService(): Promise<HomeService> {
@@ -106,7 +140,7 @@ export async function resetDemoStore(): Promise<void> {
 }
 
 /**
- * Wipe the demo database and refill it with the tour's fake home.
+ * Wipe the demo database and refill it with the tour's fake homes.
  *
  * Wiping on the way *in* rather than trusting the way out is what makes an
  * abandoned tutorial harmless: a closed tab, a refresh or a force-quit leaves
@@ -116,18 +150,28 @@ export async function seedDemoStore(t: Translate): Promise<void> {
 	await resetDemoStore();
 
 	const service = await getDemoHomeService();
-	const homeID = await service.addHome(t(DEMO_HOME_KEY));
-	await service.setActiveHome(homeID);
+	let activeHomeID: HomeID | undefined;
 
-	for (const room of DEMO_ROOMS) {
-		const roomID = await service.addRoom(homeID, t(room.nameKey));
+	for (const home of DEMO_HOMES) {
+		const homeID = await service.addHome(t(home.nameKey));
+		if (home.nameKey === DEMO_ACTIVE_HOME_KEY) {
+			activeHomeID = homeID;
+		}
 
-		for (const location of room.locations) {
-			const locationID = await service.addLocation(roomID, t(location.nameKey));
+		for (const room of home.rooms) {
+			const roomID = await service.addRoom(homeID, t(room.nameKey));
 
-			for (const itemKey of location.itemKeys) {
-				await service.addItem(locationID, t(itemKey));
+			for (const location of room.locations) {
+				const locationID = await service.addLocation(roomID, t(location.nameKey));
+
+				for (const itemKey of location.itemKeys) {
+					await service.addItem(locationID, t(itemKey));
+				}
 			}
 		}
+	}
+
+	if (activeHomeID !== undefined) {
+		await service.setActiveHome(activeHomeID);
 	}
 }

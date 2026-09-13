@@ -2,6 +2,8 @@ import type React from 'react';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
+import { TourTarget } from '../../constants';
+
 import './Modal.css';
 
 function Modal({
@@ -30,7 +32,11 @@ function Modal({
 
 	return createPortal(
 		<div className="app-modal-backdrop" onClick={onClose}>
-			<div className="app-modal" onClick={(event) => event.stopPropagation()}>
+			<div
+				className="app-modal"
+				data-tour={TourTarget.MODAL}
+				onClick={(event) => event.stopPropagation()}
+			>
 				{children}
 			</div>
 		</div>,

@@ -14,6 +14,7 @@ export const APP_VERSION: string = typeof __APP_VERSION__ === 'string' ? __APP_V
  * it, so renaming a class or reordering a list can't silently break a step.
  */
 export enum TourTarget {
+	HOME_HOMES = 'home-homes',
 	HOME_ITEMS = 'home-items',
 	HOME_ROOMS = 'home-rooms',
 	HOME_BACKUP = 'home-backup',
@@ -21,6 +22,9 @@ export enum TourTarget {
 	ITEMS_LIST = 'items-list',
 	ITEMS_FILTER = 'items-filter',
 	ITEMS_ADD = 'items-add',
+	HOMES_LIST = 'homes-list',
+	/** Any open modal. Tagged once on the shared `Modal` wrapper, so every modal has it. */
+	MODAL = 'modal',
 	ROOMS_LIST = 'rooms-list',
 	LOCATIONS_LIST = 'locations-list',
 }

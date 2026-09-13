@@ -6,6 +6,7 @@ import DustbinIcon from '../assets/dustbin.svg';
 import BackRightIcon from '../assets/back-right.svg';
 import PencilIcon from '../assets/pencil.svg';
 import Button from './Button';
+import { TourTarget } from '../constants';
 import useHomesContext from '../hooks/useHomesContext';
 import useSmartBack from '../hooks/useSmartBack';
 import type { HomeID } from '../services';
@@ -43,7 +44,10 @@ function Homes() {
 				<IconLink to="/homes/new" src={PlusIcon} alt={t('homes.add')} scale='65%' />
 			</div>
 		</h1>
-		<div className="main-buttons main-list d-flex flex-column align-items-center">
+		<div
+			className="main-buttons main-list d-flex flex-column align-items-center"
+			data-tour={TourTarget.HOMES_LIST}
+		>
 			{
 				homes.map(home => (
 					<div className="main-list-item" key={home.id}>
