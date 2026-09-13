@@ -204,7 +204,7 @@ function Tutorial() {
 			arrowColor: ARROW_COLOUR,
 			overlayColor: '#000000cc',
 			spotlightRadius: 0,
-			width: 320,
+			width: 340,
 		}}
 		styles={{
 			tooltip: {
@@ -217,11 +217,11 @@ function Tutorial() {
 			},
 			tooltipTitle: {
 				color: 'var(--colour-title)',
-				fontSize: '18px',
+				fontSize: '24px',
 				marginBottom: '10px',
 			},
 			tooltipContent: {
-				fontSize: '13px',
+				fontSize: '17px',
 				lineHeight: 1.7,
 				padding: 0,
 				textAlign: 'left',
@@ -234,12 +234,12 @@ function Tutorial() {
 				border: '1px solid var(--colour-button-border)',
 				borderRadius: 0,
 				color: 'var(--colour-text)',
-				fontSize: '12px',
+				fontSize: '16px',
 				padding: '8px 12px',
 			},
 			buttonBack: {
 				color: 'var(--colour-text)',
-				fontSize: '12px',
+				fontSize: '16px',
 				marginRight: '8px',
 			},
 			buttonClose: {
