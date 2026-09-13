@@ -7,6 +7,8 @@ export type DropdownOption<T> = {
 	value: T;
 	label: string;
 	isDisabled?: boolean;
+	// Marks the "create new…" entry, which is an action rather than a choice.
+	isCreate?: boolean;
 };
 
 export function DividerBar() {
@@ -98,6 +100,7 @@ export function dropdownStyles<T, IsMulti extends boolean = false>(): StylesConf
 					? 'rgba(0, 0, 0, 0.08)'
 					: 'transparent',
 			color: 'var(--colour-modal-text)',
+			fontStyle: props.data.isCreate ? 'italic' : 'normal',
 			opacity: props.isDisabled ? 0.4 : 1,
 			cursor: props.isDisabled ? 'not-allowed' : 'pointer',
 		}),

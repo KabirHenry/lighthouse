@@ -38,6 +38,16 @@ export type HomesContextValue = {
 	deleteLocation: (id: LocationID) => Promise<void>;
 	loadAllItems: () => Promise<void>;
 	addItem: (locationID: LocationID, name: string, description?: string) => Promise<ItemID | undefined>;
+	addItemAndLocation: (
+		roomID: RoomID,
+		locationName: string,
+		itemName: string,
+	) => Promise<{ locationID: LocationID; itemID: ItemID } | undefined>;
+	addItemAndLocationAndRoom: (
+		roomName: string,
+		locationName: string,
+		itemName: string,
+	) => Promise<{ roomID: RoomID; locationID: LocationID; itemID: ItemID } | undefined>;
 	updateItem: (id: ItemID, name: string, locationID: LocationID, description?: string) => Promise<void>;
 	deleteItem: (id: ItemID) => Promise<void>;
 	getPicture: (id: PictureID) => Promise<Picture | undefined>;

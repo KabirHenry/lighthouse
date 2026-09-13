@@ -73,6 +73,8 @@
     "myNewItem": "My New Item",
     "selectRoom": "Select a room",
     "selectLocation": "Select a location",
+    "createRoom": "Create New Room",
+    "createLocation": "Create New Location",
     "roomNoLocations": "{{name}} (no locations)",
     "nameNoItems": "{{name}} (no items)",
     "deleteConfirm": "This will delete \"{{name}}\".",

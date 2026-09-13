@@ -346,6 +346,41 @@ export class HomeService {
 		return id;
 	}
 
+	/**
+	 * Create a location inside an existing room and the item that goes in it. A
+	 * single transaction, so a failure can never leave an empty location behind.
+	 */
+	async addItemAndLocation(
+		roomID: RoomID,
+		locationName: string,
+		itemName: string,
+	): Promise<{ locationID: LocationID; itemID: ItemID }> {
+		const tx = this.db.transaction([Stores.LOCATIONS, Stores.ITEMS], 'readwrite');
+
+		const locationID = await tx.objectStore(Stores.LOCATIONS).add({ roomID, name: locationName } as Location);
+		const itemID = await tx.objectStore(Stores.ITEMS).add({ locationID, name: itemName } as Item);
+
+		await tx.done;
+		return { locationID, itemID };
+	}
+
+	/** As {@link addItemAndLocation}, but the room is new too. */
+	async addItemAndLocationAndRoom(
+		homeID: HomeID,
+		roomName: string,
+		locationName: string,
+		itemName: string,
+	): Promise<{ roomID: RoomID; locationID: LocationID; itemID: ItemID }> {
+		const tx = this.db.transaction([Stores.ROOMS, Stores.LOCATIONS, Stores.ITEMS], 'readwrite');
+
+		const roomID = await tx.objectStore(Stores.ROOMS).add({ homeID, name: roomName } as Room);
+		const locationID = await tx.objectStore(Stores.LOCATIONS).add({ roomID, name: locationName } as Location);
+		const itemID = await tx.objectStore(Stores.ITEMS).add({ locationID, name: itemName } as Item);
+
+		await tx.done;
+		return { roomID, locationID, itemID };
+	}
+
 	async updateItem(id: ItemID, updates: Partial<Omit<Item, 'id'>>): Promise<void> {
 		const itemStore = this.db.transaction(Stores.ITEMS, 'readwrite').objectStore(Stores.ITEMS);
 		const item = await itemStore.get(id);

@@ -7,43 +7,77 @@ import useHomesContext from '../../hooks/useHomesContext';
 import useSmartBack from '../../hooks/useSmartBack';
 import Button from '../Button';
 import Modal from './Modal';
-import ItemLocationFields from './ItemLocationFields';
+import ItemLocationFields, { type ItemPlacement } from './ItemLocationFields';
 import type { LocationID, RoomID } from '../../services';
+
+enum AddKind {
+	LOCATION = 'location',
+	NEW_LOCATION = 'newLocation',
+	NEW_ROOM = 'newRoom',
+}
+
+// The add path a finished placement maps onto.
+type AddTarget =
+	| { kind: AddKind.LOCATION; locationID: LocationID }
+	| { kind: AddKind.NEW_LOCATION; roomID: RoomID; locationName: string }
+	| { kind: AddKind.NEW_ROOM; roomName: string; locationName: string };
+
+// Resolves what the form would save.
+function resolveTarget({ roomID, locationID, newRoomName, newLocationName }: ItemPlacement): AddTarget | null {
+	const locationName = newLocationName?.trim();
+
+	if (newRoomName !== undefined) {
+		const roomName = newRoomName.trim();
+		return roomName && locationName ? { kind: AddKind.NEW_ROOM, roomName, locationName } : null;
+	}
+
+	if (newLocationName !== undefined) {
+		return roomID !== undefined && locationName ? { kind: AddKind.NEW_LOCATION, roomID, locationName } : null;
+	}
+
+	return locationID !== undefined ? { kind: AddKind.LOCATION, locationID } : null;
+}
 
 function AddItem() {
 	const { t } = useTranslation();
 	const [searchParams] = useSearchParams();
-	const { addItem } = useHomesContext();
+	const { addItem, addItemAndLocation, addItemAndLocationAndRoom } = useHomesContext();
 
 	const prefill = searchParams.get('via') === 'locations';
 	const roomParam = searchParams.get('room');
 	const locationParam = searchParams.get('location');
 
 	const [name, setName] = useState('');
-	const [roomID, setRoomID] = useState<RoomID | undefined>(
-		prefill && roomParam ? (Number(roomParam) as RoomID) : undefined,
-	);
-	const [locationID, setLocationID] = useState<LocationID | undefined>(
-		prefill && locationParam ? (Number(locationParam) as LocationID) : undefined,
-	);
+	const [placement, setPlacement] = useState<ItemPlacement>({
+		roomID: prefill && roomParam ? (Number(roomParam) as RoomID) : undefined,
+		locationID: prefill && locationParam ? (Number(locationParam) as LocationID) : undefined,
+	});
 
-	const canSubmit = name.trim() !== '' && locationID !== undefined;
+	const target = resolveTarget(placement);
+	const canSubmit = name.trim() !== '' && target !== null;
 
 	const search = searchParams.toString();
 	const close = useSmartBack(search ? `/items?${search}` : '/items');
 
-	const handleRoomChange = (value: RoomID) => {
-		setRoomID(value);
-		setLocationID(undefined);
-	};
-
 	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		if (!name.trim() || locationID === undefined) {
+		const itemName = name.trim();
+		if (!itemName || !target) {
 			return;
 		}
 
-		await addItem(locationID, name.trim());
+		switch (target.kind) {
+		case AddKind.NEW_ROOM:
+			await addItemAndLocationAndRoom(target.roomName, target.locationName, itemName);
+			break;
+		case AddKind.NEW_LOCATION:
+			await addItemAndLocation(target.roomID, target.locationName, itemName);
+			break;
+		case AddKind.LOCATION:
+			await addItem(target.locationID, itemName);
+			break;
+		}
+
 		close();
 	};
 
@@ -62,10 +96,9 @@ function AddItem() {
 					autoFocus
 				/>
 				<ItemLocationFields
-					roomID={roomID}
-					locationID={locationID}
-					onRoomChange={handleRoomChange}
-					onLocationChange={setLocationID}
+					placement={placement}
+					onChange={setPlacement}
+					allowCreate
 				/>
 				<div className="app-modal-footer d-flex flex-row justify-content-between w-100">
 					<Button disabled={!canSubmit} className='confirm'>{t('confirm')}</Button>

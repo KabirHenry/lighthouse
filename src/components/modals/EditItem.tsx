@@ -7,8 +7,7 @@ import useHomesContext from '../../hooks/useHomesContext';
 import useSmartBack from '../../hooks/useSmartBack';
 import Button from '../Button';
 import Modal from './Modal';
-import ItemLocationFields from './ItemLocationFields';
-import type { LocationID, RoomID } from '../../services';
+import ItemLocationFields, { type ItemPlacement } from './ItemLocationFields';
 
 function EditItem() {
 	const { t } = useTranslation();
@@ -20,18 +19,24 @@ function EditItem() {
 	const item = entry?.item;
 
 	const [name, setName] = useState(item?.name ?? '');
-	const [roomID, setRoomID] = useState<RoomID | undefined>(entry?.room.id);
-	const [locationID, setLocationID] = useState<LocationID | undefined>(item?.locationID);
+	const [placement, setPlacement] = useState<ItemPlacement>({
+		roomID: entry?.room.id,
+		locationID: item?.locationID,
+	});
 
+	const { locationID } = placement;
 	const shouldUpdate = name.trim() !== '' && locationID !== undefined &&
 		(name.trim() !== item?.name || locationID !== item?.locationID);
 
 	const search = searchParams.toString();
 	const close = useSmartBack(search ? `/items?${search}` : '/items');
 
-	const handleRoomChange = (value: RoomID) => {
-		setRoomID(value);
-		setLocationID(value === entry?.room.id ? item?.locationID : undefined);
+	const handlePlacementChange = (next: ItemPlacement) => {
+		// Changing room clears the location; Picking the item's own room again puts
+		// its current location back rather than leaving the field empty.
+		setPlacement(next.locationID === undefined && next.roomID === entry?.room.id
+			? { ...next, locationID: item?.locationID }
+			: next);
 	};
 
 	const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -59,10 +64,8 @@ function EditItem() {
 					autoFocus
 				/>
 				<ItemLocationFields
-					roomID={roomID}
-					locationID={locationID}
-					onRoomChange={handleRoomChange}
-					onLocationChange={setLocationID}
+					placement={placement}
+					onChange={handlePlacementChange}
 				/>
 				<div className='modal-hint'>{t('picture.editHint', { name: item?.name ?? '' })}</div>
 				<div className="app-modal-footer d-flex flex-row justify-content-between w-100">

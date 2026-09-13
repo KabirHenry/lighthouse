@@ -99,3 +99,34 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+/* The dropdown swaps itself for this field when "create new…" is picked. It
+   reuses the modal's text input styling so the control keeps its shape. */
+.app-dropdown-create {
+  position: relative;
+  width: 100%;
+}
+
+.app-modal .app-dropdown-create input[type="text"] {
+  padding: 10px 52px;
+}
+
+.app-dropdown-create-cancel {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  transform: translateY(-50%);
+  border: none;
+  border-radius: 50%;
+  background: var(--colour-modal-dropdown-divider);
+  color: var(--colour-modal-text);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}

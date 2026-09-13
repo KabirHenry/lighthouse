@@ -209,6 +209,26 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		return id;
 	};
 
+	const addItemAndLocation = async (roomID: RoomID, locationName: string, itemName: string) => {
+		if (!homeService) {
+			return undefined;
+		}
+
+		const created = await homeService.addItemAndLocation(roomID, locationName, itemName);
+		await refreshAfterItemChange();
+		return created;
+	};
+
+	const addItemAndLocationAndRoom = async (roomName: string, locationName: string, itemName: string) => {
+		if (!homeService || !home) {
+			return undefined;
+		}
+
+		const created = await homeService.addItemAndLocationAndRoom(home.id, roomName, locationName, itemName);
+		await refreshAfterItemChange();
+		return created;
+	};
+
 	const updateItem = async (id: ItemID, name: string, locationID: LocationID, description?: string) => {
 		if (!homeService) {
 			return;
@@ -319,6 +339,8 @@ function HomesProvider({ children }: { children: React.ReactNode }) {
 		deleteLocation,
 		loadAllItems,
 		addItem,
+		addItemAndLocation,
+		addItemAndLocationAndRoom,
 		updateItem,
 		deleteItem,
 		getPicture,
