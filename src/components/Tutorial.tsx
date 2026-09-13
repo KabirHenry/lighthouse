@@ -10,6 +10,7 @@ import {
 import {
 	EVENTS,
 	LIFECYCLE,
+	PORTAL_ELEMENT_ID,
 	STATUS,
 	useJoyride,
 	type EventHandler,
@@ -116,27 +117,17 @@ function firstRow(target: TourTarget): string {
  * The picture icon in the first row of a list — the middle slot every
  * secondary-list row carries, whether it is showing a photo or the fallback.
  */
+function firstRowName(target: TourTarget): string {
+	return `${firstRow(target)} .secondary-list-data a`;
+}
+
 function firstRowPicture(target: TourTarget): string {
 	return `${firstRow(target)} .secondary-list-icon`;
 }
 
 /** What a step carries in `Step.data`. */
-type StepData = { awaitPath?: RegExp };
+type StepData = { awaitPath?: RegExp; tappable?: string };
 
-/**
- * A step the user has to complete themselves.
- *
- * The spotlighted control stays live — Joyride drops `pointer-events` on the
- * spotlight when `blockTargetInteraction` is off — and the Next button is taken
- * away, so the only way on is to do the thing the copy asks for. `awaitPath`
- * matches the route that arriving at counts as having done it; see `Tutorial`'s
- * effect. A pattern rather than a string because some of those routes carry an
- * id, and because it keeps `/items` from quietly matching `/items/new`.
- *
- * Worth reserving for the gestures that aren't obvious — an unlabelled icon, a
- * list row that turns out to be tappable, the panel behind a `+`. Making every
- * navigation manual would just be a chore.
- */
 /**
  * A step pointing at whatever modal the step before it opened.
  *
@@ -155,11 +146,29 @@ function onModal(): Pick<Step, 'target' | 'placement' | 'floatingOptions'> {
 	};
 }
 
-function handsOn(awaitPath: RegExp): Partial<Step> {
+/**
+ * A step the user has to complete themselves.
+ *
+ * The spotlighted control stays live — Joyride drops `pointer-events` on the
+ * spotlight when `blockTargetInteraction` is off — and the Next button is taken
+ * away, so the only way on is to do the thing the copy asks for. `awaitPath`
+ * matches the route that arriving at counts as having done it; see `Tutorial`'s
+ * effect. A pattern rather than a string because some of those routes carry an
+ * id, and because it keeps `/items` from quietly matching `/items/new`.
+ *
+ * Worth reserving for the gestures that aren't obvious — an unlabelled icon, a
+ * list row that turns out to be tappable, the panel behind a `+`. Making every
+ * navigation manual would just be a chore.
+ *
+ * `tappable` is the one control that should take the tap, for steps whose
+ * spotlight has to show more than that control. It defaults to the target; see
+ * the click guard in `Tutorial`.
+ */
+function handsOn(awaitPath: RegExp, tappable?: string): Partial<Step> {
 	return {
 		blockTargetInteraction: false,
 		buttons: ['back', 'close'],
-		data: { awaitPath } satisfies StepData,
+		data: { awaitPath, tappable } satisfies StepData,
 	};
 }
 
@@ -260,7 +269,7 @@ function Tutorial() {
 			before: goTo(navigate, '/homes', TourTarget.HOMES_LIST),
 			// Switching home navigates to the home page on its own; the next step
 			// brings the user straight back to see what the switch did.
-			...handsOn(/^\/$/),
+			...handsOn(/^\/$/, `${tourSelector(TourTarget.HOMES_LIST)} .main-list-item > .btn`),
 		},
 		{
 			target: tourSelector(TourTarget.HOMES_LIST),
@@ -331,7 +340,7 @@ function Tutorial() {
 			title: t('tutorial.steps.roomsList.title'),
 			content: t('tutorial.steps.roomsList.content', { name: firstRoomName }),
 			before: goTo(navigate, '/rooms', TourTarget.ROOMS_LIST),
-			...handsOn(/^\/locations$/),
+			...handsOn(/^\/locations$/, firstRowName(TourTarget.ROOMS_LIST)),
 		},
 		{
 			target: firstRow(TourTarget.LOCATIONS_LIST),
@@ -339,7 +348,7 @@ function Tutorial() {
 			title: t('tutorial.steps.locationsList.title'),
 			content: t('tutorial.steps.locationsList.content', { name: firstLocationName }),
 			before: goTo(navigate, `/locations?room=${firstRoomID}`, TourTarget.LOCATIONS_LIST),
-			...handsOn(/^\/items$/),
+			...handsOn(/^\/items$/, firstRowName(TourTarget.LOCATIONS_LIST)),
 		},
 		{
 			target: firstRow(TourTarget.ITEMS_LIST),
@@ -423,6 +432,45 @@ function Tutorial() {
 			controls.next();
 		}
 	}, [controls, location.pathname, state.index, state.lifecycle, state.status, steps]);
+
+	// On a hands-on step, only the control the copy names takes a tap.
+	//
+	// The spotlight often has to show more than that control — the whole row, so
+	// its counts stay readable; the whole Homes list, so the 🏠 does — and with
+	// `blockTargetInteraction` off, everything inside the cutout is live. A row's
+	// picture, edit and delete icons would open modals the step knows nothing
+	// about and strand the tooltip over them. Joyride can only unblock the cutout
+	// wholesale, so the narrowing happens here, in the capture phase, before React
+	// or the router ever see the click. The tooltip's own buttons are exempt.
+	useEffect(() => {
+		if (state.status !== STATUS.RUNNING || state.lifecycle !== LIFECYCLE.TOOLTIP) {
+			return;
+		}
+
+		const step = steps[state.index];
+		const { awaitPath, tappable } = (step?.data ?? {}) as StepData;
+		const allowed = tappable ?? (typeof step?.target === 'string' ? step.target : undefined);
+		if (awaitPath === undefined || allowed === undefined) {
+			return;
+		}
+
+		const guard = (event: MouseEvent) => {
+			const clicked = event.target;
+			if (
+				!(clicked instanceof Element)
+				|| clicked.closest(`#${PORTAL_ELEMENT_ID}, .react-joyride__tooltip`)
+				|| clicked.closest(allowed)
+			) {
+				return;
+			}
+
+			event.preventDefault();
+			event.stopPropagation();
+		};
+
+		window.addEventListener('click', guard, { capture: true });
+		return () => window.removeEventListener('click', guard, { capture: true });
+	}, [state.index, state.lifecycle, state.status, steps]);
 
 	// End the tour on a Back or Forward it didn't make itself.
 	//
