@@ -43,6 +43,8 @@ export default defineConfig({
 			},
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
+				// Only link-preview crawlers ask for this, so don't make every install cache it offline.
+				globIgnores: ['**/og-image.png'],
 				navigateFallback: '/index.html',
 				cleanupOutdatedCaches: true,
 				// Ties the generated service worker to the app version so a bare
